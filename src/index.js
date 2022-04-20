@@ -1,6 +1,5 @@
-console.log('Hi there! Its working!')
+import { model } from "../src/model"
 
-function sum(a, b) {
-  return a + b;
-}
-module.exports = sum;
+
+console.log(model.add(2,3));
+
