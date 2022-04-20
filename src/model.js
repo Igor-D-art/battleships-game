@@ -2,12 +2,10 @@ export const model = (function () {
 
     const ship = (length) => {
         const shipLength = length;
-        return shipLength;
+        return { shipLength };
     };
 
-    const add = (a, b) => {
-        return a + b;
-    };
+    const cruiser = ship(3);
 
-    return { ship, add };
+    return { ship, cruiser };
 })();
