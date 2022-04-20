@@ -20,6 +20,9 @@
   },
   "homepage": "https://github.com/Igor-D-art/battleships-game#readme",
   "devDependencies": {
+    "@babel/core": "^7.17.9",
+    "@babel/preset-env": "^7.16.11",
+    "babel-loader": "^8.2.5",
     "css-loader": "^6.7.1",
     "prettier": "2.6.2",
     "style-loader": "^3.3.1",
