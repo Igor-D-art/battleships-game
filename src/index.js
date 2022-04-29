@@ -8,6 +8,7 @@ function init() {
 
     view.displayBoards();
     view.displayShips(model.player1.board.getFleet());
+    console.log(model.player1);
 
 };
 

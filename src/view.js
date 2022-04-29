@@ -27,17 +27,14 @@ export const view = (() => {
     
     const displayHit = (cellID) => {
         const cell = document.getElementById(cellID);
-        // console.log(typeof(cellID));
-        // console.log(cellID);
-        console.log(cell);
-        // cell.classList.remove('ship');
-        // cell.classList.add('hit');
+        cell.classList.remove('ship');
+        cell.classList.add('hit');
     };
 
     const displayMiss = (cellID) => {
         const cell = document.getElementById(cellID);
-        // cell.classList.remove('ship');
-        // cell.classList.add('miss');
+        cell.classList.remove('ship');
+        cell.classList.add('miss');
     };
 
     const displayShips = (ships) => {
