@@ -1,0 +1,60 @@
+* {
+    margin: 0;
+    border: none;
+    padding: 0;
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+}
+
+.message {
+    height: 10vh;
+}
+
+.main {
+    display: flex;
+    justify-content: space-around;
+    position: relative;
+    height: 70vh;
+}
+
+.p1b,
+.p2b {
+    height: 500px;
+    width: 500px;
+    border: 1px solid black;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+}
+
+.p1b div,
+.p2b div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid blue;
+}
+
+footer,
+header {
+    background-color: aqua;
+    height: 10vh;
+}
+
+.hit {
+    background-image: url(../src/images/icons8-fire-48.png);
+    background-color: rgb(245, 169, 169);
+    background-size: 100%;
+}
+
+.ship {
+    background-color: blue;
+}
+
+.miss {
+    background-image: url(../src/images/close.png);
+    background-size: 100%;
+}

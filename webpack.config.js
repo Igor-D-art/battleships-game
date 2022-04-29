@@ -1,6 +1,7 @@
 const path = require('path');
  
 module.exports = {
+  cache: false,
   mode: 'development',
   entry: './src/index.js',
  output: {
@@ -22,7 +23,11 @@ module.exports = {
             presets: ['@babel/preset-env']
           }
         }
-      }
+     },
+     {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+      },
    ],
   },
  devtool: 'inline-source-map',
