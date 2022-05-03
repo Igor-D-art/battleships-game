@@ -10,6 +10,12 @@ export const model = (() => {
         const hits = [];
         let isSunk = false;
 
+        (() => {
+            for (let i = 0; i < shipLength; i++){
+                hits.push('');
+            }
+        })();
+
         const setCoord = (cells) => {
             if (cells) {
                 locations = [];
@@ -19,8 +25,8 @@ export const model = (() => {
             };
         };
 
-        const gettingHit = (cell) => {
-            hits[cell] = 'hit';
+        const gettingHit = (cell, location) => {
+            hits[location] = 'hit';
             view.displayHit(cell);
         }
 
@@ -35,6 +41,7 @@ export const model = (() => {
     };
 
     const boardFactory = () => {
+
         const boardSize = 10;
 
         const ships = [shipFactory(4),
@@ -97,10 +104,12 @@ export const model = (() => {
         
 
         const receiveAttack = (cell) => {
+          if (illegalMoves.indexOf(cell) === -1) {
             for (let i = 0; i < ships.length; i++) {
-                if (illegalMoves.indexOf(cell) === -1) {
                         if (ships[i].locations.indexOf(cell) > -1) {
-                            ships[i].gettingHit(cell);
+                            ships[i].gettingHit(cell, ships[i].locations.indexOf(cell));
+                            ships[i].gettingSunk();
+                            console.log(ships[i])
                             break;
                         } else {
                             view.displayMiss(cell);
@@ -110,6 +119,7 @@ export const model = (() => {
             };
             illegalMoves.push(cell);
             console.log(illegalMoves)
+            console.log(ships);
         };
 
         return{ships, illegalMoves, receiveAttack}
@@ -132,23 +142,6 @@ export const model = (() => {
 
         return{playerId, board, getFleet}
     };
-
-
-    // const player1 = player(1);
-    // const player2 = player(2);
-
-    // player1.board.ships[0].locations = ['111', '112', '113', '114'];
-    // player2.board.ships[0].locations = ['211', '212', '213', '214'];
-
-    // player1.board.receiveAttack('112');
-    // player1.board.receiveAttack('113');
-    // player1.board.receiveAttack('114');
-    // player2.board.receiveAttack('212');
-  
-    // console.log(player1.board.ships[0].locations)
-    // console.log(player2.board.ships[0].locations)
-
-    // return { player1, player2 };
     
     return { player };
 
