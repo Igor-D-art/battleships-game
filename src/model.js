@@ -19,6 +19,11 @@ export const model = (() => {
             };
         };
 
+        const gettingHit = (cell) => {
+            hits[cell] = 'hit';
+            view.displayHit(cell);
+        }
+
         const gettingSunk = () => {
             if (hits.indexOf('') === -1) {
                 isSunk = true;
@@ -26,26 +31,27 @@ export const model = (() => {
             };
         };
 
-        return { setCoord ,locations, hits, isSunk, gettingSunk, direction};
+        return { setCoord ,locations, hits, isSunk, gettingSunk, direction, gettingHit};
     };
 
     const boardFactory = () => {
         const boardSize = 10;
-        // const ships = [shipFactory(4),
-        //                 shipFactory(3),
-        //                 shipFactory(3),
-        //                 shipFactory(2),
-        //                 shipFactory(2),
-        //                 shipFactory(2),
-        //                 shipFactory(1),
-        //                 shipFactory(1),
-        //                 shipFactory(1),
-        //                 shipFactory(1)];
+
+        const ships = [shipFactory(4),
+                        shipFactory(3),
+                        shipFactory(3),
+                        shipFactory(2),
+                        shipFactory(2),
+                        shipFactory(2),
+                        shipFactory(1),
+                        shipFactory(1),
+                        shipFactory(1),
+                        shipFactory(1)];
         
         const illegalMoves = [];
 
         // const randomLocations = () => {
-        //     let shipLocations; 
+        //     let shipLocations;
         //     for (let i = 0; i < ships.length; i++){
         //         do { shipLocations = generateLocations(ships[i]) }
         //         while (checkCollision(shipLocations));
@@ -75,69 +81,70 @@ export const model = (() => {
 
         // }
 
+        // const receiveAttack = (cell) => {
+        //     for (let i=0; i < player.ships.length; i++) {
+        //         if (player.board.ships[i].locations.indexOf(cell) === -1) {
+        //             console.log(player.ships[i].locations);
+        //             console.log(player.ships[i].locations.indexOf(cell));
+        //             view.displayMiss(cell);
+        //        }
+        //     };
+        //     illegalMoves.push(cell);
+        //     console.log(player1.board.illegalMoves);
+        //     console.log(player2.board.illegalMoves);
+        //     console.log(player.ships);
+        // };
         
 
         const receiveAttack = (cell) => {
-            for (let i=0; i < ships.length; i++) {
-                if (player2.board.ships[i].locations.indexOf(cell) === -1) {
-                    console.log(ships[i].locations);
-                    console.log(ships[i].locations.indexOf(cell));
-                    view.displayMiss(cell);
-               }
+            for (let i = 0; i < ships.length; i++) {
+                    if (illegalMoves.indexOf(cell) === -1) {
+                        if (ships[i].locations.indexOf(cell) > -1) {
+                        ships[i].gettingHit(ships[i].locations.indexOf(cell));
+                    }; 
+                };
             };
             illegalMoves.push(cell);
-            console.log(player1.board.illegalMoves);
-            console.log(player2.board.illegalMoves);
-            console.log(ships);
         };
 
-        return{illegalMoves, receiveAttack}
+        return{ships, illegalMoves, receiveAttack}
     };
 
     const player = (id) => {
         const playerId = id;
-        const ships = [shipFactory(4),
-                        shipFactory(3),
-                        shipFactory(3),
-                        shipFactory(2),
-                        shipFactory(2),
-                        shipFactory(2),
-                        shipFactory(1),
-                        shipFactory(1),
-                        shipFactory(1),
-                        shipFactory(1)];
+        
         const board = boardFactory();
 
         const getFleet = () => {
             const fleetCoords = [];
-            for (let i = 0; i < ships.length; i++) {
-                for (let j = 0; j < ships[i].locations.length; j++) {
-                    fleetCoords.push(ships[i].locations[j])
+            for (let i = 0; i < board.ships.length; i++) {
+                for (let j = 0; j < board.ships[i].locations.length; j++) {
+                    fleetCoords.push(board.ships[i].locations[j])
                 };
             };
             return fleetCoords;
         };
 
-        return{playerId, board, ships, getFleet}
+        return{playerId, board, getFleet}
     };
 
 
-    const player1 = player(1);
-    const player2 = player(2);
+    // const player1 = player(1);
+    // const player2 = player(2);
 
-    player1.ships[0].locations = ['111', '112', '113', '114'];
-    player2.ships[0].locations = ['211', '212', '213', '214'];
+    // player1.board.ships[0].locations = ['111', '112', '113', '114'];
+    // player2.board.ships[0].locations = ['211', '212', '213', '214'];
 
     // player1.board.receiveAttack('112');
     // player1.board.receiveAttack('113');
     // player1.board.receiveAttack('114');
     // player2.board.receiveAttack('212');
   
-    console.log(player1.ships[0].locations)
-    console.log(player2.ships[0].locations)
+    // console.log(player1.board.ships[0].locations)
+    // console.log(player2.board.ships[0].locations)
 
-    return { player1, player2 };
+    // return { player1, player2 };
     
-    // return { player };
+    return { player };
 
 })()

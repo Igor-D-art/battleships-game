@@ -1,10 +1,11 @@
 import { controller } from "./controller";
 import { model } from "./model";
+import { index } from "./index";
 
 export const view = (() => {
 
-    const displayBoards = () => {
-        
+    const displayBoards = (players) => {
+        console.log(players)
         for (let i = 1; i < 3; i++){
             const board = document.getElementById('p' + i + 'b');
             for (let j = 1; j < 11; j++) {
@@ -17,9 +18,14 @@ export const view = (() => {
                     board.appendChild(cell);
 
                     if (i === 2) {
-                        controller.addListeners(cell);
+                        cell.addEventListener('click', () => {
+                            console.log(cell.id);
+                            console.log(cell.classList)
+                            players[1].board.receiveAttack(cell.id);
+                            
+                       });
                     };
-                }
+                };
 
             };
         };
@@ -27,6 +33,7 @@ export const view = (() => {
     
     const displayHit = (cellID) => {
         const cell = document.getElementById(cellID);
+        console.log(cell);
         cell.classList.remove('ship');
         cell.classList.add('hit');
     };
