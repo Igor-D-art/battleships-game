@@ -16,8 +16,9 @@ export const view = (() => {
                     if (i === 2) {
                         cell.addEventListener('click', () => {
                             console.log(cell.id);
-                            console.log(cell.classList)
-                            players[1].board.receiveAttack(cell.id);
+                            console.log(cell.classList);
+                            controller.gameLoop(cell.id, players);
+                            // players[1].board.receiveAttack(cell.id);
                        });
                     };
 
