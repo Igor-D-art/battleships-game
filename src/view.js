@@ -5,26 +5,23 @@ import { index } from "./index";
 export const view = (() => {
 
     const displayBoards = (players) => {
-        console.log(players)
         for (let i = 1; i < 3; i++){
             const board = document.getElementById('p' + i + 'b');
             for (let j = 1; j < 11; j++) {
                 for (let k = 1; k < 11; k++) {
                     const cell = document.createElement('div');
                     cell.setAttribute('id', i + `${j}` + k);
-                    // console.log(typeof (cell.id))
-                    // console.log(cell.id)
                     cell.setAttribute('class', 'cell');
-                    board.appendChild(cell);
-
+                    
                     if (i === 2) {
                         cell.addEventListener('click', () => {
                             console.log(cell.id);
                             console.log(cell.classList)
                             players[1].board.receiveAttack(cell.id);
-                            
                        });
                     };
+
+                    board.appendChild(cell);
                 };
 
             };

@@ -98,13 +98,18 @@ export const model = (() => {
 
         const receiveAttack = (cell) => {
             for (let i = 0; i < ships.length; i++) {
-                    if (illegalMoves.indexOf(cell) === -1) {
+                if (illegalMoves.indexOf(cell) === -1) {
                         if (ships[i].locations.indexOf(cell) > -1) {
-                        ships[i].gettingHit(ships[i].locations.indexOf(cell));
-                    }; 
-                };
+                            ships[i].gettingHit(cell);
+                            break;
+                        } else {
+                            view.displayMiss(cell);
+                            break;
+                        };
+                }; 
             };
             illegalMoves.push(cell);
+            console.log(illegalMoves)
         };
 
         return{ships, illegalMoves, receiveAttack}

@@ -21,6 +21,9 @@ import { controller } from "./controller";
 
     console.log(player1.board.ships[0].locations)
     console.log(player2.board.ships[0].locations)
+
+    // player1.board.receiveAttack('111');
+    // player1.board.receiveAttack('131');
     
     console.log(player1);
     console.log(player2);
