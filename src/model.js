@@ -30,10 +30,9 @@ export const model = (() => {
             view.displayHit(cell);
         }
 
-        const gettingSunk = () => {
-            if (hits.indexOf('') === -1) {
-                isSunk = true;
-                console.log(isSunk);
+        const gettingSunk = (ship) => {
+            if (ship.hits.indexOf('') === -1) {
+                ship.isSunk = true;
             };
         };
 
@@ -108,7 +107,7 @@ export const model = (() => {
             for (let i = 0; i < ships.length; i++) {
                         if (ships[i].locations.indexOf(cell) > -1) {
                             ships[i].gettingHit(cell, ships[i].locations.indexOf(cell));
-                            ships[i].gettingSunk();
+                            ships[i].gettingSunk(ships[i]);
                             console.log(ships[i])
                             break;
                         } else {
