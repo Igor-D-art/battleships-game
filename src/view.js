@@ -15,15 +15,12 @@ export const view = (() => {
                     
                     if (i === 2) {
                         cell.addEventListener('click', () => {
-                            console.log(cell.id);
-                            console.log(cell.classList);
-                            controller.gameLoop(cell.id, players);
-                            // players[1].board.receiveAttack(cell.id);
+                            controller.makeMove(cell.id, players);
                        });
                     };
 
                     board.appendChild(cell);
-                };
+            };
 
             };
         };
@@ -37,7 +34,9 @@ export const view = (() => {
     };
 
     const displayMiss = (cellID) => {
+        console.log('Im in view, cellID = ' + cellID);
         const cell = document.getElementById(cellID);
+        console.log(cell);
         cell.classList.remove('ship');
         cell.classList.add('miss');
     };

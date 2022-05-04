@@ -6,36 +6,35 @@ export const controller = (() => {
 
     let moveCounter = 2;
     
-    const _randomMoveGen = () => {
-        const randomMove = 1 + `${Math.floor(Math.random() * (10))}` + `${Math.floor(Math.random() * (10))}`;
-        return randomMove;
+    const _randomMoveGen = (player) => {
+        const randomMove = 1 + `${Math.ceil(Math.random() * (10))}` + `${Math.ceil(Math.random() * (10))}`;
+        console.log(randomMove);
+        if (player.board.illegalMoves.indexOf(randomMove) === -1) {
+            console.log(randomMove);
+            return randomMove;
+        } else {
+          return _randomMoveGen(player);
+        };  
     };
 
-    const gameLoop = (cell, players) => {
-        // console.log(moveCounter);
-        // console.log(players);
-        // if (moveCounter % 2 === 0) {
-        //     console.log('Im here' + moveCounter);
-        //     players[0].board.receiveAttack(randomMove);
-        //     moveCounter += 1;
-        // } else {
-        //     players[1].board.receiveAttack(cell);
-        //     moveCounter += 1;
-        // }; console.log(moveCounter);
+    const makeMove = (cell, players) => {
+        if (players[1].board.illegalMoves.indexOf(cell) === -1) {
+            console.log('firs player shot')
+            players[1].board.receiveAttack(cell);
+            secPlayerShot(players[0]);
+        };
+    };
 
-        players[1].board.receiveAttack(cell);
-      
-        console.log('Im here' + moveCounter);
-
-        players[0].board.receiveAttack(_randomMoveGen());
+    const secPlayerShot = (player) => {
+        console.log('second player shot')
+        player.board.receiveAttack(_randomMoveGen(player));
         moveCounter += 1;
-
     };
 
     
     
     
 
-    return { moveCounter, gameLoop};
+    return { moveCounter, makeMove};
 
 })();
