@@ -4,7 +4,7 @@ import { players } from "./index";
 
 export const controller = (() => {
 
-    let moveCounter = 2;
+    let moveCounter = 0;
     
     const _randomMoveGen = (player) => {
         const randomMove = 1 + `${Math.ceil(Math.random() * (10))}` + `${Math.ceil(Math.random() * (10))}`;
@@ -19,21 +19,11 @@ export const controller = (() => {
 
     const makeMove = (cell, players) => {
         if (players[1].board.illegalMoves.indexOf(cell) === -1) {
-            console.log('firs player shot')
             players[1].board.receiveAttack(cell);
-            secPlayerShot(players[0]);
+            players[0].board.receiveAttack(_randomMoveGen(players[0]));
+            moveCounter += 1;
         };
     };
-
-    const secPlayerShot = (player) => {
-        console.log('second player shot')
-        player.board.receiveAttack(_randomMoveGen(player));
-        moveCounter += 1;
-    };
-
-    
-    
-    
 
     return { moveCounter, makeMove};
 
