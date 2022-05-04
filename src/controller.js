@@ -1,6 +1,6 @@
 import { model } from "./model";
 import { view } from "./view";
-import { players } from "./index";
+import { index } from "./index";
 
 export const controller = (() => {
 
@@ -22,9 +22,28 @@ export const controller = (() => {
             players[1].board.receiveAttack(cell);
             players[0].board.receiveAttack(_randomMoveGen(players[0]));
             moveCounter += 1;
+            checkWinner(players);
         };
     };
 
-    return { moveCounter, makeMove};
+    const checkWinner = (players) => {
+        
+        if (players[0].board.shipsSunk().length === 1) {
+            players[1].isWinner = true; 
+            alert(`Player ${players[1].playerId} is the winner!`);
+        } else if (players[1].board.shipsSunk().length === 1) {
+            players[0].isWinner = true; 
+            alert(`Player ${players[0].playerId} is the winner!`);
+            startNew();
+        };
+    };
+
+    const startNew = (players) => {
+        view.displayBoards(players);
+        index.player1 = model.player(1);
+        index.player2 = model.player(2);
+    };
+
+    return { moveCounter, makeMove, checkWinner};
 
 })();

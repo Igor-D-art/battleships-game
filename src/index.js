@@ -8,8 +8,8 @@ import { controller } from "./controller";
 
 (function init() {
 
-    const player1 = model.player(1);
-    const player2 = model.player(2);
+    let player1 = model.player(1);
+    let player2 = model.player(2);
 
     const players = [player1, player2];
 

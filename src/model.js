@@ -25,9 +25,8 @@ export const model = (() => {
             };
         };
 
-        const gettingHit = (cell, location) => {
+        const gettingHit = (location) => {
             hits[location] = 'hit';
-            view.displayHit(cell);
         }
 
         const gettingSunk = (ship) => {
@@ -54,6 +53,16 @@ export const model = (() => {
                         shipFactory(1),
                         shipFactory(1)];
         
+        const shipsSunk = () => {
+            const shipsSunk = [];
+            for (let i = 0; i < ships.length; i++){
+                if (ships[i].isSunk === true) {
+                    shipsSunk.push(ships[i]);
+                };
+            };
+            return shipsSunk;
+        };
+
         const illegalMoves = [];
 
         // const randomLocations = () => {
@@ -105,8 +114,9 @@ export const model = (() => {
         const receiveAttack = (cell) => {
 
             for (let i = 0; i < ships.length; i++) {
-                    if (ships[i].locations.indexOf(cell) > -1) {
-                        ships[i].gettingHit(cell, ships[i].locations.indexOf(cell));
+                if (ships[i].locations.indexOf(cell) > -1) {
+                        view.displayHit(cell);
+                        ships[i].gettingHit(ships[i].locations.indexOf(cell));
                         ships[i].gettingSunk(ships[i]);
                         break;
                     } else {
@@ -119,7 +129,7 @@ export const model = (() => {
             illegalMoves.push(cell);
         };
 
-        return{ships, illegalMoves, receiveAttack}
+        return{ships, illegalMoves, receiveAttack, shipsSunk}
     };
 
     const player = (id) => {
@@ -137,7 +147,9 @@ export const model = (() => {
             return fleetCoords;
         };
 
-        return{playerId, board, getFleet}
+        const isWinner = false;
+
+        return{playerId, board, getFleet, isWinner}
     };
     
     return { player };

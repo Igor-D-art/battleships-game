@@ -7,6 +7,9 @@ export const view = (() => {
     const displayBoards = (players) => {
         for (let i = 1; i < 3; i++){
             const board = document.getElementById('p' + i + 'b');
+            while (board.firstChild) {
+                board.firstChild.remove()
+            };
             for (let j = 1; j < 11; j++) {
                 for (let k = 1; k < 11; k++) {
                     const cell = document.createElement('div');
@@ -20,8 +23,7 @@ export const view = (() => {
                     };
 
                     board.appendChild(cell);
-            };
-
+                };
             };
         };
     };
@@ -43,13 +45,11 @@ export const view = (() => {
 
     const displayShips = (ships) => {
         for (let i = 0; i < ships.length; i++) {
-            if (ships[i] !== "") {
-            const cell = document.getElementById(`${ships[i]}`);
-            cell.classList.add('ship');
-            }
-         
+                if (ships[i] !== "") {
+                const cell = document.getElementById(`${ships[i]}`);
+                cell.classList.add('ship');
+            };
         };
-
     };
 
     return {displayBoards, displayHit, displayShips, displayMiss}
