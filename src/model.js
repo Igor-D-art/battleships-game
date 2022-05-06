@@ -8,6 +8,7 @@ export const model = (() => {
         const direction = Math.ceil(Math.random() * 2);
         const locations = [];
         const surLocations = [];
+        const forbLocations = [];
         const hits = [];
         let isSunk = false;
 
@@ -27,10 +28,12 @@ export const model = (() => {
         const gettingSunk = (ship) => {
             if (ship.hits.indexOf('') === -1) {
                 ship.isSunk = true;
+                view.displaySurLocations(ship.surLocations);
             };
+            return ship.isSunk;
         };
 
-        return { setCoord ,locations, hits, isSunk, gettingSunk, direction, gettingHit, shipLength, surLocations};
+        return { setCoord ,locations, hits, isSunk, gettingSunk, direction, gettingHit, shipLength, surLocations, forbLocations};
     };
 
     const boardFactory = (id) => {
@@ -60,14 +63,22 @@ export const model = (() => {
             return shipsSunk;
         };
 
-        const illegalMoves = [];
+        let illegalMoves = [];
 
         const randomLocations = () => {
             let shipLocations;
+            let surLocations;
+            let forbLocations;
             for (let i = 0; i < ships.length; i++){
-                do { shipLocations = generateLocations(ships[i]) }
-                while (checkCollision(shipLocations) && checkCollision(ships[i-1].surLocations));
+                do {
+                    const shipSpot = generateLocations(ships[i]);
+                    shipLocations = shipSpot[0];
+                    surLocations = shipSpot[1];
+                    forbLocations = shipLocations.concat(surLocations);
+                } while (checkCollision(shipLocations));
                 ships[i].locations = shipLocations;
+                ships[i].surLocations = surLocations;
+                ships[i].forbLocations = forbLocations;
 
                 for (let j = 0; j < ships[i].shipLength; j++){
                   ships[i].hits.push('');
@@ -78,7 +89,7 @@ export const model = (() => {
         const generateLocations = (ship) => {
             let col;
             let row;
-            // let startLocation;
+
             const newLocations = [];
             const surLocations = [];
             if (ship.direction === 1) {
@@ -88,8 +99,6 @@ export const model = (() => {
                 row = Math.ceil(Math.random() * (boardSize - (ship.shipLength + 1)));
                 col = Math.ceil(Math.random() * boardSize);
             };
-            // startLocation = boardId + `${row}` + col;
-            // newLocations.push(startLocation);
 
             for (let i = 0; i < ship.shipLength; i++) {
                 if (ship.direction === 1) {
@@ -126,16 +135,13 @@ export const model = (() => {
                 surLocations.push(boardId + `${row + ship.shipLength}` + (col));
                 surLocations.push(boardId + `${row + ship.shipLength}` + (col + 1));
             };
-
-            ship.surLocations = surLocations;
-
-            return newLocations;
+            return [newLocations, surLocations];
         };
 
         const checkCollision = (locations) => {
             for (let i = 0; i < ships.length; i++){
                 for (let j = 0; j < locations.length; j++){
-                    if (ships[i].locations.indexOf(locations[j]) >= 0) {
+                    if (ships[i].forbLocations.indexOf(locations[j]) >= 0) {
                         return true;
                     };
                 };
@@ -145,31 +151,34 @@ export const model = (() => {
         };
 
         const receiveAttack = (cell) => {
-            console.log('im in receive attack start. Cell = ' + cell);
+            illegalMoves.push(cell);
+            console.log(illegalMoves)
             for (let i = 0; i < ships.length; i++) {
                 if (ships[i].locations.indexOf(cell) >= 0) {
-                    console.log('Im in receiveAttack HIT block. Giving to view cell = ' + cell)
-                        view.displayHit(cell);
-                        ships[i].gettingHit(ships[i].locations.indexOf(cell));
-                        ships[i].gettingSunk(ships[i]);
-                        break;
-                    } else if (ships[i].locations.indexOf(cell) === -1) {
-                        console.log('Im in receiveAttack MISS block. Giving to view cell = ' + cell)
-                        view.displayMiss(cell);
-                        // break;
-                    };
+                    view.displayHit(cell);
+                    ships[i].gettingHit(ships[i].locations.indexOf(cell));
+                    ships[i].gettingSunk(ships[i]);
+                    // if (ships[i].gettingSunk(ships[i])) {
+                    //     console.log(illegalMoves);
+                    //     illegalMoves = illegalMoves.concat(ships[i].surLocations)
+                    //     console.log(illegalMoves);
+                    //     console.log(ships[i].surLocations);
+                    //     console.log(illegalMoves);
+                    // };
+                    break;
+                } else if (ships[i].locations.indexOf(cell) === -1) {
+                    // console.log('Im in receiveAttack MISS block. Giving to view cell = ' + cell)
+                    view.displayMiss(cell);
+                };
             }; 
-            illegalMoves.push(cell);
+            
         };
-
         return{ships, illegalMoves, receiveAttack, shipsSunk, randomLocations}
     };
 
     const player = (id) => {
         const playerId = id;
-        
         const board = boardFactory(playerId);
-
         const getFleet = () => {
             const fleetCoords = [];
             for (let i = 0; i < board.ships.length; i++) {
@@ -179,9 +188,7 @@ export const model = (() => {
             };
             return fleetCoords;
         };
-
         const isWinner = false;
-
         return{playerId, board, getFleet, isWinner}
     };
     

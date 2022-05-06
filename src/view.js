@@ -30,16 +30,13 @@ export const view = (() => {
     
     const displayHit = (cellID) => {
         const cell = document.getElementById(cellID);
-        console.log(cell);
         cell.classList.remove('ship');
         cell.classList.remove('miss');
         cell.classList.add('hit');
     };
 
     const displayMiss = (cellID) => {
-        console.log('Im in view, cellID = ' + cellID);
         const cell = document.getElementById(cellID);
-        console.log(cell);
         cell.classList.remove('ship');
         cell.classList.add('miss');
     };
@@ -53,5 +50,14 @@ export const view = (() => {
         };
     };
 
-    return {displayBoards, displayHit, displayShips, displayMiss}
+    const displaySurLocations = (cells) => {
+        for (let i = 0; i < cells.length; i++){
+            const cell = document.getElementById(cells[i]);
+            if (cell !== undefined && cell !== null) {
+                cell.classList.add('sur');
+            };
+        };
+    };
+
+    return {displayBoards, displayHit, displayShips, displayMiss, displaySurLocations}
 })()

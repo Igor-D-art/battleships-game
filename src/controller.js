@@ -8,9 +8,7 @@ export const controller = (() => {
     
     const _randomMoveGen = (player) => {
         const randomMove = 1 + `${Math.ceil(Math.random() * (10))}` + `${Math.ceil(Math.random() * (10))}`;
-        console.log(randomMove);
         if (player.board.illegalMoves.indexOf(randomMove) === -1) {
-            console.log(randomMove);
             return randomMove;
         } else {
           return _randomMoveGen(player);
@@ -18,6 +16,7 @@ export const controller = (() => {
     };
 
     const makeMove = (cell, players) => {
+        console.table(players[1].board.illegalMoves)
         if (players[1].board.illegalMoves.indexOf(cell) === -1) {
             players[1].board.receiveAttack(cell);
             players[0].board.receiveAttack(_randomMoveGen(players[0]));
@@ -38,8 +37,7 @@ export const controller = (() => {
         };
     };
 
-    const startNew = (players) => {
-        view.displayBoards(players);
+    const startNew = () => {
         init();
     };
 

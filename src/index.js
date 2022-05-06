@@ -15,9 +15,6 @@ export function init() {
 
     view.displayBoards(players);
     view.displayShips(player1.getFleet());
-
-    console.log(player1.board.ships)
-    console.log(player2.board.ships)
     
 };
 
