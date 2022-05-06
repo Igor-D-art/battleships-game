@@ -32,6 +32,7 @@ export const view = (() => {
         const cell = document.getElementById(cellID);
         console.log(cell);
         cell.classList.remove('ship');
+        cell.classList.remove('miss');
         cell.classList.add('hit');
     };
 

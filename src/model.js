@@ -121,19 +121,18 @@ export const model = (() => {
         const receiveAttack = (cell) => {
             console.log('im in receive attack start. Cell = ' + cell);
             for (let i = 0; i < ships.length; i++) {
-                console.log(ships[i].locations)
-                if (ships[i].locations.indexOf(cell) > -1) {
+                if (ships[i].locations.indexOf(cell) >= 0) {
+                    console.log('Im in receiveAttack HIT block. Giving to view cell = ' + cell)
                         view.displayHit(cell);
                         ships[i].gettingHit(ships[i].locations.indexOf(cell));
                         ships[i].gettingSunk(ships[i]);
                         break;
-                    } else {
-                        console.log('Im in receiveAttack miss block. Giving to view cell = ' + cell)
+                    } else if (ships[i].locations.indexOf(cell) === -1) {
+                        console.log('Im in receiveAttack MISS block. Giving to view cell = ' + cell)
                         view.displayMiss(cell);
-                        break;
+                        // break;
                     };
             }; 
-
             illegalMoves.push(cell);
         };
 
