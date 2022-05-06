@@ -7,14 +7,9 @@ export const model = (() => {
         const shipLength = length;
         const direction = Math.ceil(Math.random() * 2);
         const locations = [];
+        const surLocations = [];
         const hits = [];
         let isSunk = false;
-
-        // (() => {
-        //     for (let i = 0; i < shipLength; i++){
-        //         hits.push('');
-        //     }
-        // })();
 
         const setCoord = (cells) => {
             if (cells) {
@@ -35,7 +30,7 @@ export const model = (() => {
             };
         };
 
-        return { setCoord ,locations, hits, isSunk, gettingSunk, direction, gettingHit, shipLength};
+        return { setCoord ,locations, hits, isSunk, gettingSunk, direction, gettingHit, shipLength, surLocations};
     };
 
     const boardFactory = (id) => {
@@ -71,7 +66,7 @@ export const model = (() => {
             let shipLocations;
             for (let i = 0; i < ships.length; i++){
                 do { shipLocations = generateLocations(ships[i]) }
-                while (checkCollision(shipLocations));
+                while (checkCollision(shipLocations) && checkCollision(ships[i-1].surLocations));
                 ships[i].locations = shipLocations;
 
                 for (let j = 0; j < ships[i].shipLength; j++){
@@ -83,8 +78,9 @@ export const model = (() => {
         const generateLocations = (ship) => {
             let col;
             let row;
-            let startLocation;
-            let newLocations = [];
+            // let startLocation;
+            const newLocations = [];
+            const surLocations = [];
             if (ship.direction === 1) {
                 row = Math.ceil(Math.random() * boardSize);
                 col = Math.ceil(Math.random() * (boardSize - (ship.shipLength + 1)));
@@ -92,16 +88,46 @@ export const model = (() => {
                 row = Math.ceil(Math.random() * (boardSize - (ship.shipLength + 1)));
                 col = Math.ceil(Math.random() * boardSize);
             };
-            startLocation = boardId + `${row}` + col;
-            newLocations.push(startLocation);
+            // startLocation = boardId + `${row}` + col;
+            // newLocations.push(startLocation);
 
-            for (let i = 1; i < ship.shipLength; i++) {
+            for (let i = 0; i < ship.shipLength; i++) {
                 if (ship.direction === 1) {
                     newLocations.push(boardId + `${row}` + (col + i))
                 } else {
                     newLocations.push(boardId + `${(row + i)}` + `${col}`)
                 };
             };
+
+            if (ship.direction === 1) {
+                for (let i = 0; i < ship.shipLength; i++){
+                    surLocations.push(boardId + `${row + 1}` + (col + i));
+                    surLocations.push(boardId + `${row - 1}` + (col + i));
+                };
+                
+                surLocations.push(boardId + `${row - 1}` + (col - 1));
+                surLocations.push(boardId + `${row}` + (col - 1));
+                surLocations.push(boardId + `${row + 1}` + (col - 1));
+
+                surLocations.push(boardId + `${row - 1}` + (col + ship.shipLength));
+                surLocations.push(boardId + `${row}` + (col + ship.shipLength));
+                surLocations.push(boardId + `${row + 1}` + (col + ship.shipLength));
+            } else {
+                for (let i = 0; i < ship.shipLength; i++){
+                    surLocations.push(boardId + `${row + i}` + (col + 1));
+                    surLocations.push(boardId + `${row + i}` + (col - 1));
+                };
+                
+                surLocations.push(boardId + `${row - 1}` + (col - 1));
+                surLocations.push(boardId + `${row - 1}` + (col));
+                surLocations.push(boardId + `${row - 1}` + (col + 1));
+
+                surLocations.push(boardId + `${row + ship.shipLength}` + (col -1));
+                surLocations.push(boardId + `${row + ship.shipLength}` + (col));
+                surLocations.push(boardId + `${row + ship.shipLength}` + (col + 1));
+            };
+
+            ship.surLocations = surLocations;
 
             return newLocations;
         };
