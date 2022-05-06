@@ -1,6 +1,6 @@
 import { model } from "./model";
 import { view } from "./view";
-import { index } from "./index";
+import { init } from "./index";
 
 export const controller = (() => {
 
@@ -28,10 +28,10 @@ export const controller = (() => {
 
     const checkWinner = (players) => {
         
-        if (players[0].board.shipsSunk().length === 1) {
+        if (players[0].board.shipsSunk().length === 10) {
             players[1].isWinner = true; 
             alert(`Player ${players[1].playerId} is the winner!`);
-        } else if (players[1].board.shipsSunk().length === 1) {
+        } else if (players[1].board.shipsSunk().length === 10) {
             players[0].isWinner = true; 
             alert(`Player ${players[0].playerId} is the winner!`);
             startNew();
@@ -40,8 +40,7 @@ export const controller = (() => {
 
     const startNew = (players) => {
         view.displayBoards(players);
-        index.player1 = model.player(1);
-        index.player2 = model.player(2);
+        init();
     };
 
     return { moveCounter, makeMove, checkWinner};
