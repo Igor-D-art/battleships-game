@@ -150,28 +150,25 @@ export const model = (() => {
             return false;
         };
 
-        const receiveAttack = (cell) => {
-            illegalMoves.push(cell);
-            console.log(illegalMoves)
+        const receiveAttack = (cell, player) => {
+            player.board.illegalMoves.push(cell);
+            console.log(player.board.illegalMoves);
             for (let i = 0; i < ships.length; i++) {
                 if (ships[i].locations.indexOf(cell) >= 0) {
                     view.displayHit(cell);
                     ships[i].gettingHit(ships[i].locations.indexOf(cell));
                     ships[i].gettingSunk(ships[i]);
-                    // if (ships[i].gettingSunk(ships[i])) {
-                    //     console.log(illegalMoves);
-                    //     illegalMoves = illegalMoves.concat(ships[i].surLocations)
-                    //     console.log(illegalMoves);
-                    //     console.log(ships[i].surLocations);
-                    //     console.log(illegalMoves);
-                    // };
+                    if (ships[i].gettingSunk(ships[i])) {
+                        player.board.illegalMoves = player.board.illegalMoves.concat(ships[i].surLocations)
+                        console.log(player.board.illegalMoves);
+                        console.log(ships[i].surLocations);
+                    };
                     break;
                 } else if (ships[i].locations.indexOf(cell) === -1) {
                     // console.log('Im in receiveAttack MISS block. Giving to view cell = ' + cell)
                     view.displayMiss(cell);
                 };
             }; 
-            
         };
         return{ships, illegalMoves, receiveAttack, shipsSunk, randomLocations}
     };

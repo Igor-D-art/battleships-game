@@ -18,8 +18,8 @@ export const controller = (() => {
     const makeMove = (cell, players) => {
         console.table(players[1].board.illegalMoves)
         if (players[1].board.illegalMoves.indexOf(cell) === -1) {
-            players[1].board.receiveAttack(cell);
-            players[0].board.receiveAttack(_randomMoveGen(players[0]));
+            players[1].board.receiveAttack(cell, players[1]);
+            players[0].board.receiveAttack(_randomMoveGen(players[0]), players[0]);
             moveCounter += 1;
             checkWinner(players);
         };
