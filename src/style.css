@@ -9,15 +9,11 @@ body {
     width: 100vw;
 }
 
-.message {
-    height: 10vh;
-}
-
 .main {
     display: flex;
     justify-content: space-around;
-    position: relative;
     height: 70vh;
+    align-items: center;
 }
 
 .p1b,
@@ -26,8 +22,9 @@ body {
     width: 500px;
     border: 1px solid black;
     display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(10, 1fr);
+    grid-template-columns: repeat(10, minmax(50px, 1fr));
+    grid-template-rows: repeat(10, minmax(50px, 1fr));
+
 }
 
 .p1b div,
@@ -35,13 +32,22 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid blue;
+    border: 1px solid black;
 }
 
 footer,
 header {
-    background-color: aqua;
-    height: 10vh;
+    display: flex;
+    background-color: rgb(122, 151, 248);
+    height: 15vh;
+    font-size: 7vh;
+    justify-content: center;
+    align-items: center;
+}
+
+footer{
+    font-size: large;
+   
 }
 
 .hit {
@@ -56,11 +62,54 @@ header {
 
 .miss {
     background-image: url(../src/images/close.png);
-    background-size: 100%;
+    background-repeat: no-repeat;
+    background-size: 70%;
+    background-position: center;
 }
 
 .sur{
-    /* background-color: green; */
     background-image: url(../src/images/close.png);
+    background-repeat: no-repeat;
+    background-size: 70%;
+    background-position: center;
+}
+
+.scale{
     background-size: 100%;
+}
+
+.startNew{
+    display: flex;
+    flex-direction: column;
+    height: 150px;
+    width: 200px;
+    background-color: aqua;
+    position: absolute;
+    top: 25%;
+    left: 44%;
+    border: 1px solid rgb(0, 0, 0);
+    justify-content: space-around;
+    align-items: center;
+}
+
+.startNew p{
+    font-size: 24px;
+}
+
+.startNew button {
+    height: 50px;
+    width: 100px;
+    border: 1px solid rgb(0, 0, 0);
+    font-size: 15px;
+}
+
+button:hover{
+    background-color: rgb(17, 0, 255);
+    color: white;
+}
+
+.curtain{
+    position: absolute;
+    height: 100%;
+    width: 100%;
 }

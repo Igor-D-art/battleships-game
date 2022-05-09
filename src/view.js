@@ -21,7 +21,6 @@ export const view = (() => {
                             controller.makeMove(cell.id, players);
                        });
                     };
-
                     board.appendChild(cell);
                 };
             };
@@ -55,9 +54,30 @@ export const view = (() => {
             const cell = document.getElementById(cells[i]);
             if (cell !== undefined && cell !== null) {
                 cell.classList.add('sur');
+                cell.classList.add('scale');
+                setTimeout(()=>{cell.classList.remove('scale')}, 150);
             };
         };
     };
 
-    return {displayBoards, displayHit, displayShips, displayMiss, displaySurLocations}
+    const displayStartNew = (phraze) => {
+        const startNewPopup = document.createElement('div');
+        startNewPopup.classList.add('startNew');
+        startNewPopup.innerHTML = `
+            <p> ${phraze} </p>
+            <button id="playAgain"> Play again </button> `;
+        const cutrain = document.createElement('div');
+        cutrain.classList.add('curtain')
+        const main = document.getElementById('main');
+        main.appendChild(cutrain);
+        main.appendChild(startNewPopup);
+        const playAgain = document.getElementById('playAgain');
+        playAgain.addEventListener('click', () => {
+            main.removeChild(cutrain);
+            main.removeChild(startNewPopup);
+            controller.startNew();
+        });
+    };
+
+    return {displayBoards, displayHit, displayShips, displayMiss, displaySurLocations, displayStartNew}
 })()

@@ -26,14 +26,12 @@ export const controller = (() => {
     };
 
     const checkWinner = (players) => {
-        
         if (players[0].board.shipsSunk().length === 10) {
             players[1].isWinner = true; 
-            alert(`Player ${players[1].playerId} is the winner!`);
+            view.displayStartNew(`Stupid computer wins!`);
         } else if (players[1].board.shipsSunk().length === 10) {
             players[0].isWinner = true; 
-            alert(`Player ${players[0].playerId} is the winner!`);
-            startNew();
+            view.displayStartNew(`You win!`);
         };
     };
 
@@ -41,6 +39,6 @@ export const controller = (() => {
         init();
     };
 
-    return { moveCounter, makeMove, checkWinner};
+    return { moveCounter, makeMove, checkWinner, startNew};
 
 })();

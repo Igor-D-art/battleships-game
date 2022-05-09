@@ -160,12 +160,9 @@ export const model = (() => {
                     ships[i].gettingSunk(ships[i]);
                     if (ships[i].gettingSunk(ships[i])) {
                         player.board.illegalMoves = player.board.illegalMoves.concat(ships[i].surLocations)
-                        console.log(player.board.illegalMoves);
-                        console.log(ships[i].surLocations);
                     };
                     break;
                 } else if (ships[i].locations.indexOf(cell) === -1) {
-                    // console.log('Im in receiveAttack MISS block. Giving to view cell = ' + cell)
                     view.displayMiss(cell);
                 };
             }; 
