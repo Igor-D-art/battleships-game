@@ -1,5 +1,4 @@
 import { view } from "./view";
-import { controller } from "./controller";
 
 export const model = (() => {
 

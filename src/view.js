@@ -1,6 +1,4 @@
 import { controller } from "./controller";
-import { model } from "./model";
-import { index } from "./index";
 
 export const view = (() => {
 

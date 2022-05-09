@@ -1,4 +1,3 @@
-import { model } from "./model";
 import { view } from "./view";
 import { init } from "./index";
 
