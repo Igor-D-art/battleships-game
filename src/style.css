@@ -186,10 +186,10 @@ button:hover {
 #carrier, #battlecruiser, #destroyer, #gunship {
     display: grid;
     background-color: white; 
-    grid-template-rows: max(50px);
+    grid-template-rows: max(48px);
 }
 
-#carrier div, #battlecruiser div, #destroyer div, #gunship div{
+.part{
     border: 1px solid black;
     background-color: rgb(17, 0, 255);
 }

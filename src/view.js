@@ -147,6 +147,7 @@ export const view = (() => {
 
             ship.addEventListener('dragend', () => {
                 ship.classList.remove('dragging');
+                ship.style.board = 'none';
             })
         });
 
@@ -154,8 +155,8 @@ export const view = (() => {
             cell.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 const ship = document.querySelector('.dragging');
-                if (cell.id)
-                    cell.appendChild(ship);
+                cell.appendChild(ship);
+                console.log(ship);
                 console.log(cell.id);
             })
         });
