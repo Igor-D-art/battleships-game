@@ -5,6 +5,7 @@ export const model = (() => {
     const shipFactory = (length) => {
         const shipLength = length;
         const direction = Math.ceil(Math.random() * 2);
+        let startLocation; 
         const locations = [];
         const surLocations = [];
         const forbLocations = [];
@@ -32,7 +33,7 @@ export const model = (() => {
             return ship.isSunk;
         };
 
-        return { setCoord ,locations, hits, isSunk, gettingSunk, direction, gettingHit, shipLength, surLocations, forbLocations};
+        return { setCoord ,locations, hits, isSunk, gettingSunk, direction, gettingHit, shipLength, surLocations, forbLocations, startLocation};
     };
 
     const boardFactory = (id) => {
@@ -42,19 +43,19 @@ export const model = (() => {
         const boardSize = 10;
 
         const ships = [shipFactory(4),
-                        shipFactory(3),
-                        shipFactory(3),
-                        shipFactory(2),
-                        shipFactory(2),
-                        shipFactory(2),
-                        shipFactory(1),
-                        shipFactory(1),
-                        shipFactory(1),
-                        shipFactory(1)];
+        shipFactory(3),
+        shipFactory(3),
+        shipFactory(2),
+        shipFactory(2),
+        shipFactory(2),
+        shipFactory(1),
+        shipFactory(1),
+        shipFactory(1),
+        shipFactory(1)];
         
         const shipsSunk = () => {
             const shipsSunk = [];
-            for (let i = 0; i < ships.length; i++){
+            for (let i = 0; i < ships.length; i++) {
                 if (ships[i].isSunk === true) {
                     shipsSunk.push(ships[i]);
                 };
@@ -68,24 +69,28 @@ export const model = (() => {
             let shipLocations;
             let surLocations;
             let forbLocations;
-            for (let i = 0; i < ships.length; i++){
-                do {
-                    const shipSpot = generateLocations(ships[i]);
-                    shipLocations = shipSpot[0];
-                    surLocations = shipSpot[1];
-                    forbLocations = shipLocations.concat(surLocations);
-                } while (checkCollision(shipLocations));
-                ships[i].locations = shipLocations;
-                ships[i].surLocations = surLocations;
-                ships[i].forbLocations = forbLocations;
-
-                for (let j = 0; j < ships[i].shipLength; j++){
-                  ships[i].hits.push('');
+            for (let i = 0; i < ships.length; i++) {
+                if (ships[i].startLocation === undefined) {
+                    do {
+                        const shipSpot = generateLocations(ships[i]);
+                        shipLocations = shipSpot[0];
+                        surLocations = shipSpot[1];
+                        forbLocations = shipLocations.concat(surLocations);
+                    } while (checkCollision(shipLocations));
+                    ships[i].locations = shipLocations;
+                    ships[i].surLocations = surLocations;
+                    ships[i].forbLocations = forbLocations;
+                } else {
+                    customLocations();
+                }
+                for (let j = 0; j < ships[i].shipLength; j++) {
+                    ships[i].hits.push('');
                 }
             };
         };
 
         const generateLocations = (ship) => {
+
             let col;
             let row;
 
@@ -108,7 +113,7 @@ export const model = (() => {
             };
 
             if (ship.direction === 1) {
-                for (let i = 0; i < ship.shipLength; i++){
+                for (let i = 0; i < ship.shipLength; i++) {
                     surLocations.push(boardId + `${row + 1}` + (col + i));
                     surLocations.push(boardId + `${row - 1}` + (col + i));
                 };
@@ -121,7 +126,7 @@ export const model = (() => {
                 surLocations.push(boardId + `${row}` + (col + ship.shipLength));
                 surLocations.push(boardId + `${row + 1}` + (col + ship.shipLength));
             } else {
-                for (let i = 0; i < ship.shipLength; i++){
+                for (let i = 0; i < ship.shipLength; i++) {
                     surLocations.push(boardId + `${row + i}` + (col + 1));
                     surLocations.push(boardId + `${row + i}` + (col - 1));
                 };
@@ -130,16 +135,17 @@ export const model = (() => {
                 surLocations.push(boardId + `${row - 1}` + (col));
                 surLocations.push(boardId + `${row - 1}` + (col + 1));
 
-                surLocations.push(boardId + `${row + ship.shipLength}` + (col -1));
+                surLocations.push(boardId + `${row + ship.shipLength}` + (col - 1));
                 surLocations.push(boardId + `${row + ship.shipLength}` + (col));
                 surLocations.push(boardId + `${row + ship.shipLength}` + (col + 1));
             };
             return [newLocations, surLocations];
+
         };
 
         const checkCollision = (locations) => {
-            for (let i = 0; i < ships.length; i++){
-                for (let j = 0; j < locations.length; j++){
+            for (let i = 0; i < ships.length; i++) {
+                for (let j = 0; j < locations.length; j++) {
                     if (ships[i].forbLocations.indexOf(locations[j]) >= 0) {
                         return true;
                     };
@@ -147,6 +153,11 @@ export const model = (() => {
                 console.log(`no collisions on ship ${ships[i]}`)
             };
             return false;
+        };
+
+        const customLocations = () => {
+            
+            // code goes here if needed
         };
 
         const receiveAttack = (cell, player) => {
@@ -184,7 +195,16 @@ export const model = (() => {
         const isWinner = false;
         return{playerId, board, getFleet, isWinner}
     };
+
+    function initPlayers() {
     
-    return { player };
+    let player1 = player(1);
+    let player2 = player(2);
+
+    return [player1, player2];
+    
+};
+    
+    return { initPlayers };
 
 })()

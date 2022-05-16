@@ -1,5 +1,6 @@
 import { view } from "./view";
-import { init } from "./index";
+import { initPopup } from "./index";
+import { model } from "./model";
 
 export const controller = (() => {
 
@@ -15,7 +16,6 @@ export const controller = (() => {
     };
 
     const makeMove = (cell, players) => {
-        console.table(players[1].board.illegalMoves)
         if (players[1].board.illegalMoves.indexOf(cell) === -1) {
             players[1].board.receiveAttack(cell, players[1]);
             players[0].board.receiveAttack(_randomMoveGen(players[0]), players[0]);
@@ -35,9 +35,19 @@ export const controller = (() => {
     };
 
     const startNew = () => {
-        init();
+        initPopup();
     };
 
-    return { moveCounter, makeMove, checkWinner, startNew};
+    const startRandom = () => {
+        const players = model.initPlayers();
+        players[0].board.randomLocations();
+        players[1].board.randomLocations();
+        view.removePlaceShipPopup();
+        view.displayBoards(players);
+        view.displayShips(players[0].getFleet());
+        
+    };
+
+    return { moveCounter, makeMove, checkWinner, startNew, startRandom};
 
 })();

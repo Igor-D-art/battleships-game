@@ -2,6 +2,7 @@
     margin: 0;
     border: none;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body {
@@ -12,15 +13,17 @@ body {
 .main {
     display: flex;
     justify-content: space-around;
-    height: 70vh;
+    height: min(70vh);
     align-items: center;
 }
 
 .p1b,
-.p2b {
+.p2b, 
+.board {
     height: 500px;
     width: 500px;
     border: 1px solid black;
+    background-color: white;
     display: grid;
     grid-template-columns: repeat(10, minmax(50px, 1fr));
     grid-template-rows: repeat(10, minmax(50px, 1fr));
@@ -29,17 +32,23 @@ body {
 
 .p1b div,
 .p2b div {
-    display: flex;
+    /* display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; */
     border: 1px solid black;
+}
+
+.curtain {
+    position: absolute;
+    height: 500px;
+    width: 500px;
 }
 
 footer,
 header {
     display: flex;
     background-color: rgb(122, 151, 248);
-    height: 15vh;
+    height: min(15vh);
     font-size: 7vh;
     justify-content: center;
     align-items: center;
@@ -47,7 +56,6 @@ header {
 
 footer{
     font-size: large;
-   
 }
 
 .hit {
@@ -56,7 +64,7 @@ footer{
     background-size: 100%;
 }
 
-.ship {
+.ship, .shipGroup>div {
     background-color: blue;
 }
 
@@ -83,7 +91,7 @@ footer{
     flex-direction: column;
     height: 150px;
     width: 200px;
-    background-color: aqua;
+    background-color: rgb(122, 151, 248);
     position: absolute;
     top: 25%;
     left: 44%;
@@ -97,20 +105,95 @@ footer{
     text-align: center;
 }
 
-.startNew button {
+button {
     height: 50px;
     width: 100px;
     border: 1px solid rgb(0, 0, 0);
     font-size: 15px;
 }
 
-button:hover{
+.placeShips{
+    display: none;
+    flex-direction: column;
+    height: 600px;
+    width: 900px;
+    background-color: rgb(122, 151, 248);
+    position: absolute;
+    border: 2px solid rgb(0, 0, 0);
+    justify-content: space-around;
+    align-items: center;
+}
+
+.placeShips #board>div{
+    border: 1px solid rgb(0, 0, 0);
+}
+
+.boardwrap{
+    display: flex;
+    width: 800px;
+    justify-content: space-between;
+}
+
+.ships{
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+    width: 300px;
+    background-color: white;
+    margin-left: 30px;
+    align-items: flex-end;
+    background-color: rgb(122, 151, 248);
+}
+
+.ships button{
+    margin-top: 20px;
+}
+
+.ships p{
+    font-size: 25px;
+}
+
+button:hover {
     background-color: rgb(17, 0, 255);
     color: white;
 }
 
-.curtain{
-    position: absolute;
-    height: 100%;
-    width: 100%;
+.shipGroup{
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    width: 95%;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#carrier{
+    grid-template-columns: repeat(4, min(50px));
+}
+
+#battlecruiser{
+    grid-template-columns: repeat(3, min(50px));
+}
+
+#destroyer{
+    grid-template-columns: repeat(2, min(50px));
+}
+
+#gunship{
+    grid-template-columns: repeat(1, min(50px));
+}
+
+#carrier, #battlecruiser, #destroyer, #gunship {
+    display: grid;
+    background-color: white; 
+    grid-template-rows: max(50px);
+}
+
+#carrier div, #battlecruiser div, #destroyer div, #gunship div{
+    border: 1px solid black;
+    background-color: rgb(17, 0, 255);
+}
+
+.noBorder{
+    border: none;
 }
