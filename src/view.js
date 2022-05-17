@@ -79,16 +79,11 @@ export const view = (() => {
     };
 
     const placeShipsPopup = () => {
-        // const p2b = document.getElementById('p2b');
-        // const curtain = document.createElement('div');
-        // const firstChild = p2b.firstChild;
-        // curtain.classList.add('curtain');
-        // p2b.insertBefore(curtain, firstChild);
         displayBoards();
-        const placeShipsPopup = document.getElementById('placeShips').style.display = 'flex';
+        const placeShipsPopup = document.getElementById('placeShips');
+        placeShipsPopup.style.display = 'flex';
         const board = document.getElementById('board');
         _renderBoard(board);
-        _dragShips();
 
         const ok = document.getElementById('ok');
         ok.addEventListener('click', () => {
@@ -104,6 +99,8 @@ export const view = (() => {
         rotate.addEventListener('click', () => {
             console.log('hi there!')
         });
+
+        
     };
 
     const _renderBoard = (board) => {
@@ -115,58 +112,126 @@ export const view = (() => {
         for (let j = 1; j < 11; j++) {
             for (let k = 1; k < 11; k++) {
                 const cell = document.createElement('div');
-                cell.setAttribute('id', 1 + `${j}` + k);
+                cell.setAttribute('id', `${j}${k}`);
                 cell.setAttribute('class', 'container');
+
+                cell.addEventListener('mouseover', () => {
+                    _placeShips(cell, j, k);
+                })
+
+
+                // cell.addEventListener('mouseover', () => {
+                //     cell.classList.add('shipspot');
+                //     if (cell.nextElementSibling && cell.nextElementSibling.id === (`${j}` + (k + 1))) {
+                //         console.log(cell.nextElementSibling.id)
+                //         cell.nextElementSibling.classList.add('shipspot');
+                //     }
+                // })
+
+                // cell.addEventListener('mouseleave', () => {
+                //     cell.classList.remove('shipspot');
+                //     if (cell.nextElementSibling && cell.nextElementSibling.id === (`${j}` + (k + 1))) {
+                    
+                //        cell.nextElementSibling.classList.remove('shipspot');
+                //     }
+                // })
+
+                // cell.addEventListener('click', () => {
+                    
+                //     if (cell.nextElementSibling && cell.nextElementSibling.id === (`${j}` + (k + 1))) {
+                //         cell.classList.add('ship');
+                //         cell.nextElementSibling.classList.add('ship');
+                //     }
+                // })
+
+                // cell.addEventListener('mouseover', () => {
+                //     const nextPart = document.getElementById(`${j + 1}${k}`);
+                //     cell.classList.add('shipspot');
+                //     if (nextPart.id !== `11${k}`) {
+                //         nextPart.classList.add('shipspot');
+                //     }
+                    
+                // })
+
+                // cell.addEventListener('mouseleave', () => {
+                //     const nextPart = document.getElementById(`${j + 1}${k}`);
+                //     cell.classList.remove('shipspot');
+                //     nextPart.classList.remove('shipspot');
+                // })
+
+                // cell.addEventListener('click', () => {
+                //     const nextPart = document.getElementById(`${j + 1}${k}`);
+                    
+                //     if (nextPart.id !== `11${k}`) {
+                //         cell.classList.add('ship');
+                //         nextPart.classList.add('ship');
+                //     }
+                // })
+
                 initBoard.appendChild(cell);
             };
         };
     };
 
-    const _dragShips = () => {
-        const cruiser = document.querySelector('#carrier');
-        console.log(cruiser);
-        const cruiserDivs = Array(cruiser.getElementsByTagName('div'));
-        console.log(cruiserDivs);
+    const _placeShips = (cell, row, col) => {
+        const forbidHor = ['11', '21', '31', '41', '51', '61', '71', '81', '91', '101']; 
 
-        cruiserDivs.forEach(segment => {
-            // segment.addEventListener('click', () => {
-            // })
+        const forbidVert = [];
+
+        _placeCarrier(cell, forbidHor, forbidVert, row, col);
+
+    };
+
+    const _placeCarrier = (cell, forbidHor, forbidVert, row, col) => {
+
+        let placed = false;
+
+        // const part2 = cell.nextElementSibling;
+
+        const part1 = cell;
+        const part2 = document.getElementById(`${row}${col + 1}`);
+        const part3 = document.getElementById(`${row}${col + 2}`);
+        const part4 = document.getElementById(`${row}${col + 3}`);
+
+        const carrier = [part1, part2, part3, part4];
+
+        carrier.forEach(part => {
+            if (part !== null && part.id !== `${row}${11}` && part.id !== `${row}${12}` && part.id !== `${row}${13}`) {
+                part.classList.add('shipspot');
+            }
+
+           
+
+            part1.addEventListener('mouseleave', () => {
+                part1.classList.remove('shipspot');
+                if (part4 !== null || (part4!==null && part3!==null) || (part4!==null && part3!==null && part2!== null)) {
+                    part2.classList.remove('shipspot');
+                    part3.classList.remove('shipspot');
+                    part4.classList.remove('shipspot');
+                }
+               
+            });
         })
 
+
+        // part1.classList.add('shipspot');
+
+        // if (part2 !== null || part3 !==null || part4!==null) {
+            
+        //     part2.classList.add('shipspot');
+        //     part3.classList.add('shipspot');
+        //     part4.classList.add('shipspot'); 
+        // }
         
 
 
-        const dragables = document.querySelectorAll('.dragable');
-        console.log(dragables);
-        const containers = document.querySelectorAll('.container');
+        
 
-        dragables.forEach(ship => {
-            ship.addEventListener('dragstart', () => {
-                ship.classList.add('dragging');
-            });
-
-            ship.addEventListener('dragend', () => {
-                ship.classList.remove('dragging');
-                ship.style.board = 'none';
-            })
-        });
-
-        containers.forEach(cell => {
-            cell.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                const ship = document.querySelector('.dragging');
-                cell.appendChild(ship);
-                console.log(ship);
-                console.log(cell.id);
-            })
-        });
-    }
+    };
 
     const removePlaceShipPopup = () => {
-        const placeShipsPopup = document.getElementById('placeShips').style.display = 'none';
-        const p2b = document.getElementById('p2b');
-        // const curtain = document.querySelector('.curtain');
-        // p2b.removeChild(curtain);
+        const placeShipsPopup = document.getElementById('placeShips');
+        placeShipsPopup.style.display = 'none';
     };
 
 

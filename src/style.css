@@ -197,3 +197,7 @@ button:hover {
 .noBorder{
     border: none;
 }
+
+.shipspot{
+    background-color: blueviolet;
+}
