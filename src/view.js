@@ -2,6 +2,8 @@ import { controller } from "./controller";
 
 export const view = (() => {
 
+    let vertical = false;
+
     const displayBoards = (players) => {
         for (let i = 1; i < 3; i++) {
             const board = document.getElementById('p' + i + 'b');
@@ -14,7 +16,7 @@ export const view = (() => {
                     cell.setAttribute('id', i + `${j}` + k);
                     cell.setAttribute('class', 'cell');
                     
-                    if (i === 2 && players!==undefined) {
+                    if (i === 2 && players !== undefined) {
                         cell.addEventListener('click', () => {
                             controller.makeMove(cell.id, players);
                         });
@@ -95,16 +97,22 @@ export const view = (() => {
             controller.startRandom();
         });
 
-        const rotate = document.getElementById('ok');
+        const rotate = document.getElementById('rotate');
         rotate.addEventListener('click', () => {
-            console.log('hi there!')
+            if (vertical) {
+                vertical = false;
+                _renderBoard(board);
+            } else {
+                vertical = true;
+                console.log(vertical);
+                _renderBoard(board);
+            }
         });
-
-        
     };
 
     const _renderBoard = (board) => {
         const initBoard = board;
+
         while (initBoard.firstChild) {
             initBoard.firstChild.remove()
         };
@@ -115,118 +123,91 @@ export const view = (() => {
                 cell.setAttribute('id', `${j}${k}`);
                 cell.setAttribute('class', 'container');
 
-                cell.addEventListener('mouseover', () => {
-                    _placeShips(cell, j, k);
-                })
-
-
-                // cell.addEventListener('mouseover', () => {
-                //     cell.classList.add('shipspot');
-                //     if (cell.nextElementSibling && cell.nextElementSibling.id === (`${j}` + (k + 1))) {
-                //         console.log(cell.nextElementSibling.id)
-                //         cell.nextElementSibling.classList.add('shipspot');
-                //     }
-                // })
-
-                // cell.addEventListener('mouseleave', () => {
-                //     cell.classList.remove('shipspot');
-                //     if (cell.nextElementSibling && cell.nextElementSibling.id === (`${j}` + (k + 1))) {
-                    
-                //        cell.nextElementSibling.classList.remove('shipspot');
-                //     }
-                // })
-
-                // cell.addEventListener('click', () => {
-                    
-                //     if (cell.nextElementSibling && cell.nextElementSibling.id === (`${j}` + (k + 1))) {
-                //         cell.classList.add('ship');
-                //         cell.nextElementSibling.classList.add('ship');
-                //     }
-                // })
-
-                // cell.addEventListener('mouseover', () => {
-                //     const nextPart = document.getElementById(`${j + 1}${k}`);
-                //     cell.classList.add('shipspot');
-                //     if (nextPart.id !== `11${k}`) {
-                //         nextPart.classList.add('shipspot');
-                //     }
-                    
-                // })
-
-                // cell.addEventListener('mouseleave', () => {
-                //     const nextPart = document.getElementById(`${j + 1}${k}`);
-                //     cell.classList.remove('shipspot');
-                //     nextPart.classList.remove('shipspot');
-                // })
-
-                // cell.addEventListener('click', () => {
-                //     const nextPart = document.getElementById(`${j + 1}${k}`);
-                    
-                //     if (nextPart.id !== `11${k}`) {
-                //         cell.classList.add('ship');
-                //         nextPart.classList.add('ship');
-                //     }
-                // })
+                _placeCarrier(cell, j, k);
 
                 initBoard.appendChild(cell);
             };
         };
     };
 
-    const _placeShips = (cell, row, col) => {
-        const forbidHor = ['11', '21', '31', '41', '51', '61', '71', '81', '91', '101']; 
-
-        const forbidVert = [];
-
-        _placeCarrier(cell, forbidHor, forbidVert, row, col);
-
-    };
-
-    const _placeCarrier = (cell, forbidHor, forbidVert, row, col) => {
-
-        let placed = false;
-
-        // const part2 = cell.nextElementSibling;
+    const _placeCarrier = (cell, j, k) => {
 
         const part1 = cell;
-        const part2 = document.getElementById(`${row}${col + 1}`);
-        const part3 = document.getElementById(`${row}${col + 2}`);
-        const part4 = document.getElementById(`${row}${col + 3}`);
+        
+        if (vertical === false) {
+            if (k < 8) {
+                part1.addEventListener('mouseover', () => {
+                    const part2 = part1.nextElementSibling;
+                    const part3 = part2.nextElementSibling;
+                    const part4 = part3.nextElementSibling;
 
-        const carrier = [part1, part2, part3, part4];
+                    part1.classList.add('shipspot');
+                    part2.classList.add('shipspot');
+                    part3.classList.add('shipspot');
+                    part4.classList.add('shipspot');
+                })
+                
+                part1.addEventListener('mouseleave', () => {
+                    const part2 = part1.nextElementSibling;
+                    const part3 = part2.nextElementSibling;
+                    const part4 = part3.nextElementSibling;
 
-        carrier.forEach(part => {
-            if (part !== null && part.id !== `${row}${11}` && part.id !== `${row}${12}` && part.id !== `${row}${13}`) {
-                part.classList.add('shipspot');
-            }
-
-           
-
-            part1.addEventListener('mouseleave', () => {
-                part1.classList.remove('shipspot');
-                if (part4 !== null || (part4!==null && part3!==null) || (part4!==null && part3!==null && part2!== null)) {
+                    part1.classList.remove('shipspot');
                     part2.classList.remove('shipspot');
                     part3.classList.remove('shipspot');
                     part4.classList.remove('shipspot');
-                }
-               
-            });
-        })
+                })
 
+                part1.addEventListener('click', () => {
+                    const part2 = part1.nextElementSibling;
+                    const part3 = part2.nextElementSibling;
+                    const part4 = part3.nextElementSibling;
 
-        // part1.classList.add('shipspot');
+                    part1.classList.add('ship');
+                    part2.classList.add('ship');
+                    part3.classList.add('ship');
+                    part4.classList.add('ship');
+                    console.log(vertical)
+                })
+            }
+        } else if (vertical === true) {
+            if (j < 8) {
+                part1.addEventListener('mouseover', () => {
+                    const part2 = document.getElementById(`${j + 1}${k}`);
+                    const part3 = document.getElementById(`${j + 2}${k}`);
+                    const part4 = document.getElementById(`${j + 3}${k}`);
 
-        // if (part2 !== null || part3 !==null || part4!==null) {
+                    part1.classList.add('shipspot');
+                    part2.classList.add('shipspot');
+                    part3.classList.add('shipspot');
+                    part4.classList.add('shipspot');
+                })
             
-        //     part2.classList.add('shipspot');
-        //     part3.classList.add('shipspot');
-        //     part4.classList.add('shipspot'); 
-        // }
-        
+                part1.addEventListener('mouseleave', () => {
+                    const part2 = document.getElementById(`${j + 1}${k}`);
+                    const part3 = document.getElementById(`${j + 2}${k}`);
+                    const part4 = document.getElementById(`${j + 3}${k}`);
 
+                    part1.classList.remove('shipspot');
+                    part2.classList.remove('shipspot');
+                    part3.classList.remove('shipspot');
+                    part4.classList.remove('shipspot');
+                })
 
-        
+                part1.addEventListener('click', () => {
+                    const part2 = document.getElementById(`${j + 1}${k}`);
+                    const part3 = document.getElementById(`${j + 2}${k}`);
+                    const part4 = document.getElementById(`${j + 3}${k}`);
 
+                    part1.classList.add('ship');
+                    part2.classList.add('ship');
+                    part3.classList.add('ship');
+                    part4.classList.add('ship');
+
+                    return;
+                })
+            }
+        }
     };
 
     const removePlaceShipPopup = () => {

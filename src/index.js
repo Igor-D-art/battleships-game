@@ -8,10 +8,3 @@ export function initPopup() {
 
 
 initPopup();
-
-
-
-
-
-
-
