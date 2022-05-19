@@ -35,6 +35,7 @@ export const controller = (() => {
     };
 
     const startNew = () => {
+        const players = model.initPlayers();
         initPopup();
     };
 
@@ -48,6 +49,34 @@ export const controller = (() => {
         
     };
 
-    return { moveCounter, makeMove, checkWinner, startNew, startRandom};
+    const parseCoords = (coords) => {
+        const parsedCoords = [];
+        for (let i = 0; i < coords.length; i++) {
+            parsedCoords.push([]);
+            for (let j = 0; j < coords[i].length; j++) {
+                const shipCoords = `1${coords[i][j]}`;
+                parsedCoords[i].push(shipCoords);
+            }
+        }
+        return parsedCoords;
+    };
+
+    const passCoords = (coords) => {
+        const players = model.initPlayers();
+        for (let i = 0; i < coords.length; i++){
+            players[0].board.ships[i].locations = coords[i];
+        }
+        _startPlaced(players);
+        
+    }
+
+    const _startPlaced = (players) => {
+        players[1].board.randomLocations();
+        view.removePlaceShipPopup();
+        view.displayBoards(players);
+        view.displayShips(players[0].getFleet());
+    }
+
+    return { moveCounter, makeMove, checkWinner, startNew, startRandom, parseCoords, passCoords};
 
 })();

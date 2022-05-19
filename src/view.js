@@ -1,8 +1,6 @@
-import { controller } from "./controller";
+import { controller } from "./controller"; 
 
 export const view = (() => {
-
-    let vertical = false;
 
     const displayBoards = (players) => {
         for (let i = 1; i < 3; i++) {
@@ -80,11 +78,13 @@ export const view = (() => {
         });
     };
 
+    const board = document.getElementById('board');
+
     const placeShipsPopup = () => {
         displayBoards();
         const placeShipsPopup = document.getElementById('placeShips');
         placeShipsPopup.style.display = 'flex';
-        const board = document.getElementById('board');
+        // const board = document.getElementById('board');
         _renderBoard(board);
 
         const ok = document.getElementById('ok');
@@ -99,12 +99,13 @@ export const view = (() => {
 
         const rotate = document.getElementById('rotate');
         rotate.addEventListener('click', () => {
-            if (vertical) {
-                vertical = false;
+            if (shipPlacer.vertical) {
+                shipPlacer.vertical = false;
+                console.log(shipPlacer.vertical);
                 _renderBoard(board);
             } else {
-                vertical = true;
-                console.log(vertical);
+                shipPlacer.vertical = true;
+                console.log(shipPlacer.vertical);
                 _renderBoard(board);
             }
         });
@@ -112,7 +113,7 @@ export const view = (() => {
 
     const _renderBoard = (board) => {
         const initBoard = board;
-
+        let coords;
         while (initBoard.firstChild) {
             initBoard.firstChild.remove()
         };
@@ -123,92 +124,314 @@ export const view = (() => {
                 cell.setAttribute('id', `${j}${k}`);
                 cell.setAttribute('class', 'container');
 
-                _placeCarrier(cell, j, k);
-
+                if (shipPlacer.carrierCounter<1) {
+                    _placeCarrier(cell, j, k);
+                } else if (shipPlacer.cruiserCounter<2) {
+                    _placeCruiser(cell, j, k);
+                } else if (shipPlacer.destroyerCounter<3) {
+                    _placeDestroyer(cell, j, k);
+                } else if (shipPlacer.gunboatCounter < 4) {
+                    _placeGunboat(cell, j, k)
+                } else {
+                    coords = controller.parseCoords(shipPlacer.coords);
+                }
+                
                 initBoard.appendChild(cell);
+
+                for (let i = 0; i < shipPlacer.coords.length; i++) {
+                    if (shipPlacer.coords[i].indexOf(cell.id) >= 0) {
+                        cell.classList.add('ship');
+                    }
+                };
+                
             };
         };
+        if (coords!=undefined && coords.length >= 10) {
+            controller.passCoords(coords);
+        }
+        
     };
+
+    const shipPlacer = {
+        coords: [],
+        vertical: false,
+        carrierCounter: 0,
+        cruiserCounter: 0,
+        destroyerCounter: 0,
+        gunboatCounter: 0,
+        allPlaced:false,
+    }
+
 
     const _placeCarrier = (cell, j, k) => {
 
-        const part1 = cell;
-        
-        if (vertical === false) {
+        let part1, part2, part3, part4;
+        part1 = cell;
+        if (shipPlacer.vertical === false) {
             if (k < 8) {
                 part1.addEventListener('mouseover', () => {
-                    const part2 = part1.nextElementSibling;
-                    const part3 = part2.nextElementSibling;
-                    const part4 = part3.nextElementSibling;
+                    part2 = part1.nextElementSibling;
+                    part3 = part2.nextElementSibling;
+                    part4 = part3.nextElementSibling;
+                    const carrier = [part1, part2, part3, part4];
 
-                    part1.classList.add('shipspot');
-                    part2.classList.add('shipspot');
-                    part3.classList.add('shipspot');
-                    part4.classList.add('shipspot');
+                    carrier.forEach(part => {
+                        part.classList.add('shipspot');
+                    })
                 })
                 
                 part1.addEventListener('mouseleave', () => {
                     const part2 = part1.nextElementSibling;
                     const part3 = part2.nextElementSibling;
                     const part4 = part3.nextElementSibling;
+                    const carrier = [part1, part2, part3, part4];
 
-                    part1.classList.remove('shipspot');
-                    part2.classList.remove('shipspot');
-                    part3.classList.remove('shipspot');
-                    part4.classList.remove('shipspot');
+                    carrier.forEach(part => {
+                        part.classList.remove('shipspot');
+                    })
                 })
 
                 part1.addEventListener('click', () => {
                     const part2 = part1.nextElementSibling;
                     const part3 = part2.nextElementSibling;
                     const part4 = part3.nextElementSibling;
+                    const carrier = [part1, part2, part3, part4];
 
-                    part1.classList.add('ship');
-                    part2.classList.add('ship');
-                    part3.classList.add('ship');
-                    part4.classList.add('ship');
-                    console.log(vertical)
+                     carrier.forEach(part => {
+                        part.classList.add('ships');
+                    })
+                    
+                    shipPlacer.coords.push([`${part1.id}`, `${part2.id}`, `${part3.id}`, `${part4.id}`]);
+                    console.log(shipPlacer.coords);
+                    shipPlacer.carrierCounter += 1;
+                    _renderBoard(board);
+                    return;
                 })
             }
-        } else if (vertical === true) {
+        } else if (shipPlacer.vertical === true) {
             if (j < 8) {
                 part1.addEventListener('mouseover', () => {
                     const part2 = document.getElementById(`${j + 1}${k}`);
                     const part3 = document.getElementById(`${j + 2}${k}`);
                     const part4 = document.getElementById(`${j + 3}${k}`);
+                    const carrier = [part1, part2, part3, part4];
 
-                    part1.classList.add('shipspot');
-                    part2.classList.add('shipspot');
-                    part3.classList.add('shipspot');
-                    part4.classList.add('shipspot');
+                    carrier.forEach(part => {
+                        part.classList.add('shipspot');
+                    })
                 })
             
                 part1.addEventListener('mouseleave', () => {
                     const part2 = document.getElementById(`${j + 1}${k}`);
                     const part3 = document.getElementById(`${j + 2}${k}`);
                     const part4 = document.getElementById(`${j + 3}${k}`);
+                    const carrier = [part1, part2, part3, part4];
 
-                    part1.classList.remove('shipspot');
-                    part2.classList.remove('shipspot');
-                    part3.classList.remove('shipspot');
-                    part4.classList.remove('shipspot');
+                    carrier.forEach(part => {
+                        part.classList.remove('shipspot');
+                    })
                 })
 
                 part1.addEventListener('click', () => {
                     const part2 = document.getElementById(`${j + 1}${k}`);
                     const part3 = document.getElementById(`${j + 2}${k}`);
                     const part4 = document.getElementById(`${j + 3}${k}`);
+                    const carrier = [part1, part2, part3, part4];
 
-                    part1.classList.add('ship');
-                    part2.classList.add('ship');
-                    part3.classList.add('ship');
-                    part4.classList.add('ship');
+                    carrier.forEach(part => {
+                        part.classList.add('ship');
+                    })
 
+                    shipPlacer.coords.push([`${part1.id}`, `${part2.id}`, `${part3.id}`, `${part4.id}`]);
+                    console.log(shipPlacer.coords);
+                    shipPlacer.carrierCounter += 1;
+                    _renderBoard(board);
                     return;
                 })
             }
         }
     };
+
+    const _placeCruiser = (cell, j, k) => {
+       let part1, part2, part3;
+        part1 = cell;
+        if (shipPlacer.vertical === false) {
+            if (k < 9) {
+                part1.addEventListener('mouseover', () => {
+                    part2 = part1.nextElementSibling;
+                    part3 = part2.nextElementSibling;
+                    const carrier = [part1, part2, part3];
+
+                    carrier.forEach(part => {
+                        part.classList.add('shipspot');
+                    })
+                })
+                
+                part1.addEventListener('mouseleave', () => {
+                    const part2 = part1.nextElementSibling;
+                    const part3 = part2.nextElementSibling;
+                    const carrier = [part1, part2, part3];
+
+                    carrier.forEach(part => {
+                        part.classList.remove('shipspot');
+                    })
+                })
+
+                part1.addEventListener('click', () => {
+                    const part2 = part1.nextElementSibling;
+                    const part3 = part2.nextElementSibling;
+                    const carrier = [part1, part2, part3];
+
+                     carrier.forEach(part => {
+                        part.classList.add('ships');
+                    })
+                    
+                    shipPlacer.coords.push([`${part1.id}`, `${part2.id}`, `${part3.id}`]);
+                    console.log(shipPlacer.coords);
+                    shipPlacer.cruiserCounter+=1;
+                    _renderBoard(board);
+                    return;
+                })
+            }
+        } else if (shipPlacer.vertical === true) {
+            if (j < 9) {
+                part1.addEventListener('mouseover', () => {
+                    const part2 = document.getElementById(`${j + 1}${k}`);
+                    const part3 = document.getElementById(`${j + 2}${k}`);
+                    const carrier = [part1, part2, part3];
+
+                    carrier.forEach(part => {
+                        part.classList.add('shipspot');
+                    })
+                })
+            
+                part1.addEventListener('mouseleave', () => {
+                    const part2 = document.getElementById(`${j + 1}${k}`);
+                    const part3 = document.getElementById(`${j + 2}${k}`);
+                    const carrier = [part1, part2, part3];
+
+                    carrier.forEach(part => {
+                        part.classList.remove('shipspot');
+                    })
+                })
+
+                part1.addEventListener('click', () => {
+                    const part2 = document.getElementById(`${j + 1}${k}`);
+                    const part3 = document.getElementById(`${j + 2}${k}`);
+                    const carrier = [part1, part2, part3];
+
+                    carrier.forEach(part => {
+                        part.classList.add('ship');
+                    })
+
+                    shipPlacer.coords.push([`${part1.id}`, `${part2.id}`, `${part3.id}`]);
+                    console.log(shipPlacer.coords);
+                    shipPlacer.cruiserCounter+=1;
+                    _renderBoard(board);
+                    return;
+                })
+            }
+        }
+    }
+
+     const _placeDestroyer = (cell, j, k) => {
+       let part1, part2;
+        part1 = cell;
+        if (shipPlacer.vertical === false) {
+            if (k < 10) {
+                part1.addEventListener('mouseover', () => {
+                    part2 = part1.nextElementSibling;
+                    const carrier = [part1, part2];
+
+                    carrier.forEach(part => {
+                        part.classList.add('shipspot');
+                    })
+                })
+                
+                part1.addEventListener('mouseleave', () => {
+                    const part2 = part1.nextElementSibling;
+                    const carrier = [part1, part2];
+
+                    carrier.forEach(part => {
+                        part.classList.remove('shipspot');
+                    })
+                })
+
+                part1.addEventListener('click', () => {
+                    const part2 = part1.nextElementSibling;
+                    const carrier = [part1, part2];
+
+                     carrier.forEach(part => {
+                        part.classList.add('ships');
+                    })
+                    
+                    shipPlacer.coords.push([`${part1.id}`, `${part2.id}`]);
+                    console.log(shipPlacer.coords);
+                    shipPlacer.destroyerCounter+=1;
+                    _renderBoard(board);
+                    return;
+                })
+            }
+        } else if (shipPlacer.vertical === true) {
+            if (j < 10) {
+                part1.addEventListener('mouseover', () => {
+                    const part2 = document.getElementById(`${j + 1}${k}`);
+                    const carrier = [part1, part2];
+
+                    carrier.forEach(part => {
+                        part.classList.add('shipspot');
+                    })
+                })
+            
+                part1.addEventListener('mouseleave', () => {
+                    const part2 = document.getElementById(`${j + 1}${k}`);
+                    const carrier = [part1, part2];
+
+                    carrier.forEach(part => {
+                        part.classList.remove('shipspot');
+                    })
+                })
+
+                part1.addEventListener('click', () => {
+                    const part2 = document.getElementById(`${j + 1}${k}`);
+                    const carrier = [part1, part2];
+
+                    carrier.forEach(part => {
+                        part.classList.add('ship');
+                    })
+
+                    shipPlacer.coords.push([`${part1.id}`, `${part2.id}`]);
+                    console.log(shipPlacer.coords);
+                    shipPlacer.destroyerCounter+=1;
+                    _renderBoard(board);
+                    return;
+                })
+            }
+        }
+    }
+    
+
+    const _placeGunboat = (cell) => {
+        const  part1 = cell;
+    
+        part1.addEventListener('mouseover', () => {
+            part1.classList.add('shipspot');
+        })
+        
+        part1.addEventListener('mouseleave', () => {
+            part1.classList.remove('shipspot');
+        })
+
+        part1.addEventListener('click', () => {
+            part1.classList.add('ships');
+            
+            shipPlacer.coords.push([`${part1.id}`]);
+            console.log(shipPlacer.coords);
+            shipPlacer.gunboatCounter += 1;
+            _renderBoard(board);
+            return;
+        })
+    }
 
     const removePlaceShipPopup = () => {
         const placeShipsPopup = document.getElementById('placeShips');

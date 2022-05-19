@@ -12,13 +12,8 @@ export const model = (() => {
         const hits = [];
         let isSunk = false;
 
-        const setCoord = (cells) => {
-            if (cells) {
-                locations = [];
-                for (let i = 0; i < shipLength; i++) {
-                    locations.push(`${cells[i]}`);
-                }; 
-            };
+        const setCoord = (coords) => {
+            locations = coords;
         };
 
         const gettingHit = (location) => {
