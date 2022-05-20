@@ -1,6 +1,5 @@
 import { view } from "./view";
 import { initPopup } from "./index";
-import { model } from "./model";
 
 export const controller = (() => {
 
@@ -28,25 +27,14 @@ export const controller = (() => {
         if (players[0].board.shipsSunk().length === 10) {
             players[1].isWinner = true; 
             view.displayStartNew(`Stupid computer wins!`);
-        } else if (players[1].board.shipsSunk().length === 10) {
+        } else if (players[1].board.shipsSunk().length === 1) { // dont forget to revert to 10 instead of one
             players[0].isWinner = true; 
             view.displayStartNew(`You win!`);
         };
     };
 
     const startNew = () => {
-        const players = model.initPlayers();
         initPopup();
-    };
-
-    const startRandom = () => {
-        const players = model.initPlayers();
-        players[0].board.randomLocations();
-        players[1].board.randomLocations();
-        view.removePlaceShipPopup();
-        view.displayBoards(players);
-        view.displayShips(players[0].getFleet());
-        
     };
 
     const parseCoords = (coords) => {
@@ -58,25 +46,35 @@ export const controller = (() => {
                 parsedCoords[i].push(shipCoords);
             }
         }
+        // passCoords(parsedCoords, players);
         return parsedCoords;
     };
 
-    const passCoords = (coords) => {
-        const players = model.initPlayers();
-        for (let i = 0; i < coords.length; i++){
+    const passCoords = (coords, players) => {
+        for (let i = 0; i < coords.length; i++) {
             players[0].board.ships[i].locations = coords[i];
         }
-        _startPlaced(players);
-        
-    }
+        // startPlaced(players);
+    };
 
-    const _startPlaced = (players) => {
+    const startRandom = (players) => {
+        console.log(players);
+        // console.log(players[0].board.ships);
+        // console.log(players[1].board.ships);
+        players[0].board.randomLocations();
+        players[1].board.randomLocations();
+        view.removePlaceShipPopup();
+        view.displayBoards(players);
+        view.displayShips(players[0].getFleet()); 
+    };
+
+    const startPlaced = (players) => {
         players[1].board.randomLocations();
         view.removePlaceShipPopup();
         view.displayBoards(players);
         view.displayShips(players[0].getFleet());
-    }
+    };
 
-    return { moveCounter, makeMove, checkWinner, startNew, startRandom, parseCoords, passCoords};
+    return { moveCounter, makeMove, checkWinner, startNew, startRandom, parseCoords, passCoords, startPlaced};
 
 })();

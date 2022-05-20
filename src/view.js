@@ -78,23 +78,40 @@ export const view = (() => {
         });
     };
 
-    const board = document.getElementById('board');
+    // const board = document.getElementById('board');
 
-    const placeShipsPopup = () => {
-        displayBoards();
+    const placeShipsPopup = (players) => {
+        console.log(players[0].board.ships);
+        console.log(players[1].board.ships);
+        const board = document.getElementById('board');
+        displayBoards(players);
+        _clearShipPlacer();
+        // _renderBoard(board);
+        // _fleetSetuper();
         const placeShipsPopup = document.getElementById('placeShips');
         placeShipsPopup.style.display = 'flex';
-        // const board = document.getElementById('board');
-        _renderBoard(board);
+        
 
         const ok = document.getElementById('ok');
-        ok.addEventListener('click', () => {
-            console.log('hi there!')
+        ok.addEventListener('click', () => {  
+            if (shipPlacer.coords.length === 10) {
+                // console.log(shipPlacer.coords)
+                const coords = controller.parseCoords(shipPlacer.coords);
+                controller.passCoords(coords, players);
+                controller.startPlaced(players);
+            }
+        });
+
+        const reset = document.getElementById('reset');
+        reset.addEventListener('click', () => {
+            _clearShipPlacer();
+            _renderBoard(board);
+            _fleetSetuper();
         });
 
         const random = document.getElementById('random');
         random.addEventListener('click', () => {
-            controller.startRandom();
+            controller.startRandom(players);
         });
 
         const rotate = document.getElementById('rotate');
@@ -103,17 +120,19 @@ export const view = (() => {
                 shipPlacer.vertical = false;
                 console.log(shipPlacer.vertical);
                 _renderBoard(board);
+                _fleetSetuper();
             } else {
                 shipPlacer.vertical = true;
                 console.log(shipPlacer.vertical);
                 _renderBoard(board);
+                _fleetSetuper();
             }
         });
     };
 
     const _renderBoard = (board) => {
         const initBoard = board;
-        let coords;
+
         while (initBoard.firstChild) {
             initBoard.firstChild.remove()
         };
@@ -123,19 +142,6 @@ export const view = (() => {
                 const cell = document.createElement('div');
                 cell.setAttribute('id', `${j}${k}`);
                 cell.setAttribute('class', 'container');
-
-                if (shipPlacer.carrierCounter<1) {
-                    _placeCarrier(cell, j, k);
-                } else if (shipPlacer.cruiserCounter<2) {
-                    _placeCruiser(cell, j, k);
-                } else if (shipPlacer.destroyerCounter<3) {
-                    _placeDestroyer(cell, j, k);
-                } else if (shipPlacer.gunboatCounter < 4) {
-                    _placeGunboat(cell, j, k)
-                } else {
-                    coords = controller.parseCoords(shipPlacer.coords);
-                }
-                
                 initBoard.appendChild(cell);
 
                 for (let i = 0; i < shipPlacer.coords.length; i++) {
@@ -146,10 +152,29 @@ export const view = (() => {
                 
             };
         };
-        if (coords!=undefined && coords.length >= 10) {
-            controller.passCoords(coords);
-        }
+    };
+
+    const _fleetSetuper = () => {
+       console.log(shipPlacer);
+       console.log(shipPlacer.vertical);
+        for (let j = 1; j < 11; j++) {
+            for (let k = 1; k < 11; k++) {
+                const cell = document.getElementById(`${j}${k}`);
+
+                if (shipPlacer.carrierCounter < 1) {
+                    _placeCarrier(cell, j, k);
+                } else if (shipPlacer.cruiserCounter<2) {
+                    _placeCruiser(cell, j, k);
+                } else if (shipPlacer.destroyerCounter<3) {
+                    _placeDestroyer(cell, j, k);
+                } else if (shipPlacer.gunboatCounter < 4) {
+                    _placeGunboat(cell, j, k)
+                } else {
+                    return;
+                };
         
+            };
+        };
     };
 
     const shipPlacer = {
@@ -159,15 +184,25 @@ export const view = (() => {
         cruiserCounter: 0,
         destroyerCounter: 0,
         gunboatCounter: 0,
-        allPlaced:false,
     }
 
+    const _clearShipPlacer = () => {
+        shipPlacer.coords = [];
+        shipPlacer.vertical = false;
+        shipPlacer.carrierCounter = 0;
+        shipPlacer.cruiserCounter = 0;
+        shipPlacer.destroyerCounter = 0;
+        shipPlacer.gunboatCounter = 0;
+    }
 
     const _placeCarrier = (cell, j, k) => {
-
+        console.log(shipPlacer);
+        console.log(shipPlacer.vertical);
         let part1, part2, part3, part4;
         part1 = cell;
+      
         if (shipPlacer.vertical === false) {
+            // console.log(shipPlacer.vertical);
             if (k < 8) {
                 part1.addEventListener('mouseover', () => {
                     part2 = part1.nextElementSibling;
@@ -198,17 +233,19 @@ export const view = (() => {
                     const carrier = [part1, part2, part3, part4];
 
                      carrier.forEach(part => {
-                        part.classList.add('ships');
+                        part.classList.add('ship');
                     })
                     
                     shipPlacer.coords.push([`${part1.id}`, `${part2.id}`, `${part3.id}`, `${part4.id}`]);
-                    console.log(shipPlacer.coords);
                     shipPlacer.carrierCounter += 1;
+                    // console.log(shipPlacer)
                     _renderBoard(board);
+                    _fleetSetuper();
                     return;
                 })
             }
         } else if (shipPlacer.vertical === true) {
+            // console.log(shipPlacer.vertical);
             if (j < 8) {
                 part1.addEventListener('mouseover', () => {
                     const part2 = document.getElementById(`${j + 1}${k}`);
@@ -243,9 +280,10 @@ export const view = (() => {
                     })
 
                     shipPlacer.coords.push([`${part1.id}`, `${part2.id}`, `${part3.id}`, `${part4.id}`]);
-                    console.log(shipPlacer.coords);
+                    // console.log(shipPlacer);
                     shipPlacer.carrierCounter += 1;
                     _renderBoard(board);
+                    _fleetSetuper();
                     return;
                 })
             }
@@ -287,9 +325,10 @@ export const view = (() => {
                     })
                     
                     shipPlacer.coords.push([`${part1.id}`, `${part2.id}`, `${part3.id}`]);
-                    console.log(shipPlacer.coords);
+                    // console.log(shipPlacer.coords);
                     shipPlacer.cruiserCounter+=1;
                     _renderBoard(board);
+                    _fleetSetuper();
                     return;
                 })
             }
@@ -325,9 +364,10 @@ export const view = (() => {
                     })
 
                     shipPlacer.coords.push([`${part1.id}`, `${part2.id}`, `${part3.id}`]);
-                    console.log(shipPlacer.coords);
+                    // console.log(shipPlacer.coords);
                     shipPlacer.cruiserCounter+=1;
                     _renderBoard(board);
+                    _fleetSetuper();
                     return;
                 })
             }
@@ -366,9 +406,10 @@ export const view = (() => {
                     })
                     
                     shipPlacer.coords.push([`${part1.id}`, `${part2.id}`]);
-                    console.log(shipPlacer.coords);
+                    // console.log(shipPlacer.coords);
                     shipPlacer.destroyerCounter+=1;
                     _renderBoard(board);
+                    _fleetSetuper();
                     return;
                 })
             }
@@ -401,9 +442,10 @@ export const view = (() => {
                     })
 
                     shipPlacer.coords.push([`${part1.id}`, `${part2.id}`]);
-                    console.log(shipPlacer.coords);
+                    // console.log(shipPlacer.coords);
                     shipPlacer.destroyerCounter+=1;
                     _renderBoard(board);
+                    _fleetSetuper();
                     return;
                 })
             }
@@ -424,11 +466,11 @@ export const view = (() => {
 
         part1.addEventListener('click', () => {
             part1.classList.add('ships');
-            
             shipPlacer.coords.push([`${part1.id}`]);
-            console.log(shipPlacer.coords);
+            // console.log(shipPlacer.coords);
             shipPlacer.gunboatCounter += 1;
             _renderBoard(board);
+            _fleetSetuper();
             return;
         })
     }
@@ -441,3 +483,49 @@ export const view = (() => {
 
     return {removePlaceShipPopup, displayBoards, displayHit, displayShips, displayMiss, displaySurLocations, displayStartNew, placeShipsPopup}
 })()
+
+
+
+
+ // const shipLocator = (cell) => {
+    //     let coords;
+    //     if (shipPlacer.carrierCounter < 1) {
+    //                 _placeCarrier(cell);
+    //             } else if (shipPlacer.cruiserCounter<2) {
+    //                 _placeCruiser(cell);
+    //             } else if (shipPlacer.destroyerCounter<3) {
+    //                 _placeDestroyer(cell);
+    //             } else if (shipPlacer.gunboatCounter < 4) {
+    //                 _placeGunboat(cell)
+    //             } else {
+    //                 coords = controller.parseCoords(shipPlacer.coords);
+    //                 clearShipPlacer();
+    //                 console.log(shipPlacer);
+    //             }
+        
+    //      if (coords!=undefined && coords.length >= 10) {
+    //         controller.passCoords(coords);
+    //     }
+    // }
+
+      // let j;
+        // let k;
+        // if (cell.id.length === 4) {
+        //     j = `${cell.id}`.charAt(0) + `${cell.id}`.charAt(1);
+        // } else if (cell.id.length ===3 && cell.id.charAt(1)===0) {
+        //     j =`${cell.id}`.charAt(0)
+        // }
+
+        // if (cell.id.length === 4) {
+        //   k = `${cell.id}`.charAt(1) + `${cell.id}`.charAt(2);
+        // } else if (cell.id.length === 3) {
+        //   k = `${cell.id}`.charAt(2) + `${cell.id}`.charAt(3);
+        // } else {
+        //   k = `${cell.id}`.charAt(1);
+        // }
+
+        // console.log(j)
+        // console.log(k)
+
+
+        

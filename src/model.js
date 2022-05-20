@@ -192,13 +192,10 @@ export const model = (() => {
     };
 
     function initPlayers() {
-    
-    let player1 = player(1);
-    let player2 = player(2);
-
-    return [player1, player2];
-    
-};
+        let player1 = player(1);
+        let player2 = player(2);
+        return [player1, player2];
+    };
     
     return { initPlayers };
 
