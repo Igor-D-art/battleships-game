@@ -150,11 +150,6 @@ export const model = (() => {
             return false;
         };
 
-        const customLocations = () => {
-            
-            // code goes here if needed
-        };
-
         const receiveAttack = (cell, player) => {
             player.board.illegalMoves.push(cell);
             console.log(player.board.illegalMoves);

@@ -78,16 +78,15 @@ export const view = (() => {
         });
     };
 
-    // const board = document.getElementById('board');
+    const board = document.getElementById('board');
 
     const placeShipsPopup = (players) => {
         console.log(players[0].board.ships);
         console.log(players[1].board.ships);
-        const board = document.getElementById('board');
-        displayBoards(players);
+        displayBoards();
         _clearShipPlacer();
-        // _renderBoard(board);
-        // _fleetSetuper();
+        _renderBoard(board);
+        _fleetSetuper();
         const placeShipsPopup = document.getElementById('placeShips');
         placeShipsPopup.style.display = 'flex';
         
@@ -484,48 +483,6 @@ export const view = (() => {
     return {removePlaceShipPopup, displayBoards, displayHit, displayShips, displayMiss, displaySurLocations, displayStartNew, placeShipsPopup}
 })()
 
-
-
-
- // const shipLocator = (cell) => {
-    //     let coords;
-    //     if (shipPlacer.carrierCounter < 1) {
-    //                 _placeCarrier(cell);
-    //             } else if (shipPlacer.cruiserCounter<2) {
-    //                 _placeCruiser(cell);
-    //             } else if (shipPlacer.destroyerCounter<3) {
-    //                 _placeDestroyer(cell);
-    //             } else if (shipPlacer.gunboatCounter < 4) {
-    //                 _placeGunboat(cell)
-    //             } else {
-    //                 coords = controller.parseCoords(shipPlacer.coords);
-    //                 clearShipPlacer();
-    //                 console.log(shipPlacer);
-    //             }
-        
-    //      if (coords!=undefined && coords.length >= 10) {
-    //         controller.passCoords(coords);
-    //     }
-    // }
-
-      // let j;
-        // let k;
-        // if (cell.id.length === 4) {
-        //     j = `${cell.id}`.charAt(0) + `${cell.id}`.charAt(1);
-        // } else if (cell.id.length ===3 && cell.id.charAt(1)===0) {
-        //     j =`${cell.id}`.charAt(0)
-        // }
-
-        // if (cell.id.length === 4) {
-        //   k = `${cell.id}`.charAt(1) + `${cell.id}`.charAt(2);
-        // } else if (cell.id.length === 3) {
-        //   k = `${cell.id}`.charAt(2) + `${cell.id}`.charAt(3);
-        // } else {
-        //   k = `${cell.id}`.charAt(1);
-        // }
-
-        // console.log(j)
-        // console.log(k)
 
 
         

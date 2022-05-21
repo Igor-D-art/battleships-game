@@ -27,14 +27,14 @@ export const controller = (() => {
         if (players[0].board.shipsSunk().length === 10) {
             players[1].isWinner = true; 
             view.displayStartNew(`Stupid computer wins!`);
-        } else if (players[1].board.shipsSunk().length === 1) { // dont forget to revert to 10 instead of one
+        } else if (players[1].board.shipsSunk().length === 10) { 
             players[0].isWinner = true; 
             view.displayStartNew(`You win!`);
         };
     };
 
     const startNew = () => {
-        initPopup();
+        location.reload();
     };
 
     const parseCoords = (coords) => {
@@ -46,7 +46,7 @@ export const controller = (() => {
                 parsedCoords[i].push(shipCoords);
             }
         }
-        // passCoords(parsedCoords, players);
+
         return parsedCoords;
     };
 
