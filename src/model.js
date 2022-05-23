@@ -65,19 +65,17 @@ export const model = (() => {
             let surLocations;
             let forbLocations;
             for (let i = 0; i < ships.length; i++) {
-                if (ships[i].startLocation === undefined) {
-                    do {
-                        const shipSpot = generateLocations(ships[i]);
-                        shipLocations = shipSpot[0];
-                        surLocations = shipSpot[1];
-                        forbLocations = shipLocations.concat(surLocations);
-                    } while (checkCollision(shipLocations));
-                    ships[i].locations = shipLocations;
-                    ships[i].surLocations = surLocations;
-                    ships[i].forbLocations = forbLocations;
-                } else {
-                    customLocations();
-                }
+                
+                do {
+                    const shipSpot = generateLocations(ships[i]);
+                    shipLocations = shipSpot[0];
+                    surLocations = shipSpot[1];
+                    forbLocations = shipLocations.concat(surLocations);
+                } while (checkCollision(shipLocations));
+                ships[i].locations = shipLocations;
+                ships[i].surLocations = surLocations;
+                ships[i].forbLocations = forbLocations;
+        
                 for (let j = 0; j < ships[i].shipLength; j++) {
                     ships[i].hits.push('');
                 }

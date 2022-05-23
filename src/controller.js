@@ -54,7 +54,6 @@ export const controller = (() => {
         for (let i = 0; i < coords.length; i++) {
             players[0].board.ships[i].locations = coords[i];
         }
-        // startPlaced(players);
     };
 
     const startRandom = (players) => {

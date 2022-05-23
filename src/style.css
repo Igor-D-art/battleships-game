@@ -116,12 +116,17 @@ button {
     display: none;
     flex-direction: column;
     height: 600px;
-    width: 900px;
+    width: 700px;
     background-color: rgb(122, 151, 248);
     position: absolute;
     border: 2px solid rgb(0, 0, 0);
-    justify-content: space-around;
+    /* justify-content: space-around; */
     align-items: center;
+}
+
+.placeShips>p{
+    font-size: 40px;
+    margin-bottom: 20px;
 }
 
 .placeShips #board>div{
@@ -130,7 +135,7 @@ button {
 
 .boardwrap{
     display: flex;
-    width: 800px;
+    width: 630px;
     justify-content: space-between;
 }
 
@@ -138,9 +143,8 @@ button {
     display: flex;
     flex-direction: column;
     height: 500px;
-    width: 300px;
+    width: 100px;
     background-color: white;
-    margin-left: 30px;
     align-items: flex-end;
     background-color: rgb(122, 151, 248);
 }
@@ -200,4 +204,12 @@ button:hover {
 
 .shipspot{
     background-color: blueviolet;
+}
+
+.forbidden{
+    background-color: rgb(255, 188, 188);
+}
+
+#ok{
+    margin-bottom: 30px;
 }
